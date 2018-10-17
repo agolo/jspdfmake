@@ -1,0 +1,23 @@
+{
+  "name": "jspdfmake",
+  "version": "1.0.0",
+  "description": "A wrapper for jsPdf that provides a nice api to generate pdf files in an easy and customizable way",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agolo/jspdfmake.git"
+  },
+  "keywords": [
+    "pdf",
+    "jsPdf"
+  ],
+  "author": "Abkreno <mohamedelhamamsy789@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/agolo/jspdfmake/issues"
+  },
+  "homepage": "https://github.com/agolo/jspdfmake#readme"
+}
