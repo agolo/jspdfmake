@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/agolo/jspdfmake/issues"
   },
-  "homepage": "https://github.com/agolo/jspdfmake#readme"
+  "homepage": "https://github.com/agolo/jspdfmake#readme",
+  "dependencies": {
+    "jspdf": "1.4.1"
+  }
 }
