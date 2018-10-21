@@ -76,6 +76,7 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     pageXMargin,
     pageYMargin,
     maxLineWidth,
+    pageWidth,
   } = this;
   this.clearDoc();
   let yOffset = pageYMargin;
@@ -89,7 +90,7 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
 
     let xMargin = pageXMargin;
     if (align === 'center') {
-      xMargin = (maxLineWidth + pageXMargin) / 2.0;
+      xMargin = pageWidth / 2.0;
     } else if (align === 'right') {
       xMargin = maxLineWidth;
     }
