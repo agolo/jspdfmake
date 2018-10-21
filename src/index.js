@@ -1,8 +1,6 @@
 
 import JsPDF from 'jspdf';
-import example from './example.json';
-import example2 from './example2.json';
-import { DEFAULT_FONT_SIZE } from './constants';
+import { DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT, DEFAULT_ALIGN } from './constants';
 
 export default function JsPdfMake(title, docDefinition) {
   this.docDefinition = docDefinition;
@@ -11,12 +9,14 @@ export default function JsPdfMake(title, docDefinition) {
     unit: 'pt',
     format: 'a4',
     hotfixes: [], // an array of hotfix strings to enable
+    lineHeight: DEFAULT_LINE_HEIGHT,
   };
   this.doc = new JsPDF(this.options).setProperties({ title });
   this.pageWidth = this.doc.internal.pageSize.getWidth();
   this.pageHeight = this.doc.internal.pageSize.getHeight();
-  this.margin = 20;
-  this.maxLineWidth = this.pageWidth - this.margin * 2;
+  this.pageXMargin = 0;
+  this.pageYMargin = 0;
+  this.maxLineWidth = this.pageWidth - this.pageXMargin * 2;
   // const oneLineHeight = fontSize * lineHeight / ptsPerInch;
 }
 
@@ -32,27 +32,96 @@ JsPdfMake.prototype.clearDoc = function clearDoc() {
   doc.addPage();
 };
 
+
+/**
+ * @param {String} text The text to be inlined
+ * @param {Number} xOffset The x offset for the new text
+ * @param {Number} yOffset The y offset for the new text
+ * @param {Number} fontSize The font size for the new text
+ * @param {Number} maxFontSize The maximum font size in this line.
+ * @param {String} align Either 'left', 'right' or 'center', default is 'left'
+ */
+JsPdfMake.prototype.drawTextInLine = function drawTextInLine(
+  text,
+  xOffset = 0,
+  yOffset = 0,
+  fontSize = DEFAULT_FONT_SIZE,
+  maxFontSize = 0,
+  align = DEFAULT_ALIGN,
+) {
+  const {
+    doc,
+  } = this;
+  const center = fontSize / 2.0 + fontSize / 4.0; // The renderer starts drawing text at the center
+  doc
+    .setFontSize(fontSize)
+    .text(
+      xOffset,
+      center + Math.max(fontSize, maxFontSize) - fontSize + yOffset,
+      text,
+      null,
+      null,
+      align,
+    );
+  return {
+    nextXOffset: xOffset + doc.getTextWidth(text),
+    nextYOffset: yOffset + fontSize,
+  };
+};
+
 JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefinition() {
   const {
     doc,
     docDefinition,
-    margin,
+    pageXMargin,
+    pageYMargin,
     maxLineWidth,
   } = this;
   this.clearDoc();
-  let offset = margin;
-  let prevTextHeight = 0;
-  docDefinition.content.forEach(({ text, fontSize = DEFAULT_FONT_SIZE, align }) => {
+  let yOffset = pageYMargin;
+  // let xOffset = pageXMargin;
+  docDefinition.content.forEach(({ text, fontSize = DEFAULT_FONT_SIZE, align = DEFAULT_ALIGN }) => {
     // splitTextToSize takes your string and turns it in to an array of strings,
     // each of which can be displayed within the specified maxLineWidth.
     const textLines = doc
       .setFontSize(fontSize)
       .splitTextToSize(text, maxLineWidth);
-    offset += prevTextHeight + fontSize;
 
-    let xMargin = margin;
+    let xMargin = pageXMargin;
     if (align === 'center') {
-      xMargin = (maxLineWidth + margin) / 2.0;
+      xMargin = (maxLineWidth + pageXMargin) / 2.0;
+    } else if (align === 'right') {
+      xMargin = maxLineWidth;
+    }
+    // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
+    textLines.forEach((line) => {
+      const { nextYOffset } = this.drawTextInLine(line, xMargin, yOffset, fontSize, 0, align);
+      yOffset = nextYOffset;
+    });
+  });
+};
+
+JsPdfMake.prototype.generateFromDocDefinitionOld = function generateFromDocDefinitionOld() {
+  const {
+    doc,
+    docDefinition,
+    pageXMargin,
+    maxLineWidth,
+  } = this;
+  this.clearDoc();
+  let offset = pageXMargin;
+  let prevTextHeight = 0;
+  docDefinition.content.forEach(({ text, fontSize = DEFAULT_FONT_SIZE, align = 'left' }) => {
+    // splitTextToSize takes your string and turns it in to an array of strings,
+    // each of which can be displayed within the specified maxLineWidth.
+    const textLines = doc
+      .setFontSize(fontSize)
+      .splitTextToSize(text, maxLineWidth);
+    offset += prevTextHeight;
+
+    let xMargin = pageXMargin;
+    if (align === 'center') {
+      xMargin = (maxLineWidth + pageXMargin) / 2.0;
     } else if (align === 'right') {
       xMargin = maxLineWidth;
     }
@@ -61,22 +130,7 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
     doc.text(xMargin, yMargin, textLines, null, null, align);
     // Calculate the height of the text very simply:
-    prevTextHeight = textLines.length * fontSize;
+    prevTextHeight = textLines.length * doc.getLineHeight();
+    doc.line(0, yMargin, 1000, yMargin);
   });
-};
-
-export const test = new JsPdfMake('My PDF', example);
-test.generateFromDocDefinition();
-test.setDocDefinition(example2);
-// test.generateFromDocDefinition();
-let str = test.doc.output('datauristring');
-const iframe = document.createElement('iframe');
-iframe.src = str;
-iframe.width = '100%';
-iframe.height = '100%';
-document.body.appendChild(iframe);
-document.doc = test.doc;
-document.refreshDoc = () => {
-  str = test.doc.output('datauristring');
-  iframe.src = str;
 };

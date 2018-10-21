@@ -1,0 +1,19 @@
+{
+  "content": [{
+    "text": "|________|",
+    "fontSize": 10,
+    "align": "left"
+  }, {
+    "text": "|________|",
+    "fontSize": 20,
+    "align": "left"
+  }, {
+    "text": "|________|",
+    "fontSize": 34,
+    "align": "left"
+  }, {
+    "text": "|________|",
+    "fontSize": 24,
+    "align": "left"
+  }]
+}
