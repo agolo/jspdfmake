@@ -64,7 +64,7 @@ JsPdfMake.prototype.drawTextInLine = function drawTextInLine(
       align,
     );
   return {
-    nextXOffset: xOffset + doc.getTextWidth(text),
+    nextXOffset: xOffset + doc.getTextWidth(`${text} `),
     nextYOffset: yOffset + fontSize,
   };
 };
@@ -82,6 +82,12 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   let yOffset = pageYMargin;
   // let xOffset = pageXMargin;
   docDefinition.content.forEach(({ text, fontSize = DEFAULT_FONT_SIZE, align = DEFAULT_ALIGN }) => {
+    if (typeof text === 'object') {
+      // TODO: HANDLE INLINE TEXT OBJECTS
+      console.warn('Objects are not yet supported as text, this section will not be rendered');
+      return;
+    }
+
     // splitTextToSize takes your string and turns it in to an array of strings,
     // each of which can be displayed within the specified maxLineWidth.
     const textLines = doc
