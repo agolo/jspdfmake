@@ -1,13 +1,13 @@
-import JsPdfMake from './index';
-import example from './example3.json';
+import JsPdfMake from '../src';
+import example from './examples/example3.json';
 
 const test = new JsPdfMake('My PDF', example);
 const { doc } = test;
-// test.generateFromDocDefinition();
+test.generateFromDocDefinition();
 
-const vals = test.drawTextInLine('|________|', 0, 0, 20, 35);
-const newVals = test.drawTextInLine('|________|', vals.nextXOffset, 0, 25, 35);
-test.drawTextInLine('|________|', newVals.nextXOffset, 0, 35);
+// const vals = test.drawTextInLine('|________|', 0, 0, 20, 35);
+// const newVals = test.drawTextInLine('|________|', vals.nextXOffset, 0, 25, 35);
+// test.drawTextInLine('|________|', newVals.nextXOffset, 0, 35);
 
 // For debugging
 document.doc = doc;
