@@ -1,6 +1,12 @@
 
 import JsPDF from 'jspdf';
-import { DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT, DEFAULT_ALIGN } from './constants';
+import {
+  DEFAULT_FONT_SIZE,
+  DEFAULT_LINE_HEIGHT,
+  DEFAULT_ALIGN,
+  DEFAULT_FONT_NAME,
+  DEFAULT_FONT_STYLE,
+} from './constants';
 
 export default function JsPdfMake(title, docDefinition) {
   this.docDefinition = docDefinition;
@@ -47,7 +53,6 @@ JsPdfMake.prototype.drawTextInLine = function drawTextInLine(
   yOffset = 0,
   fontSize = DEFAULT_FONT_SIZE,
   maxFontSize = 0,
-  align = DEFAULT_ALIGN,
 ) {
   const {
     doc,
@@ -59,9 +64,6 @@ JsPdfMake.prototype.drawTextInLine = function drawTextInLine(
       xOffset,
       center + Math.max(fontSize, maxFontSize) - fontSize + yOffset,
       text,
-      null,
-      null,
-      align,
     );
   return {
     nextXOffset: xOffset + doc.getTextWidth(`${text} `),
@@ -81,7 +83,13 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   this.clearDoc();
   let yOffset = pageYMargin;
   // let xOffset = pageXMargin;
-  docDefinition.content.forEach(({ text, fontSize = DEFAULT_FONT_SIZE, align = DEFAULT_ALIGN }) => {
+  docDefinition.content.forEach(({
+    text,
+    fontSize = DEFAULT_FONT_SIZE,
+    fontName = DEFAULT_FONT_NAME,
+    fontStyle = DEFAULT_FONT_STYLE,
+    align = DEFAULT_ALIGN,
+  }) => {
     if (typeof text === 'object') {
       // TODO: HANDLE INLINE TEXT OBJECTS
       console.warn('Objects are not yet supported as text, this section will not be rendered');
@@ -92,17 +100,18 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     // each of which can be displayed within the specified maxLineWidth.
     const textLines = doc
       .setFontSize(fontSize)
+      .setFont(fontName, fontStyle)
       .splitTextToSize(text, maxLineWidth);
 
-    let xMargin = pageXMargin;
-    if (align === 'center') {
-      xMargin = pageWidth / 2.0;
-    } else if (align === 'right') {
-      xMargin = maxLineWidth;
-    }
     // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
     textLines.forEach((line) => {
-      const { nextYOffset } = this.drawTextInLine(line, xMargin, yOffset, fontSize, 0, align);
+      let xMargin = pageXMargin;
+      if (align === 'center') {
+        xMargin = pageWidth / 2.0 - doc.getTextWidth(line) / 2.0;
+      } else if (align === 'right') {
+        xMargin = pageWidth - doc.getTextWidth(line) - pageXMargin;
+      }
+      const { nextYOffset } = this.drawTextInLine(line, xMargin, yOffset, fontSize, 0);
       yOffset = nextYOffset;
     });
   });
