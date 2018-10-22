@@ -107,37 +107,3 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     });
   });
 };
-
-JsPdfMake.prototype.generateFromDocDefinitionOld = function generateFromDocDefinitionOld() {
-  const {
-    doc,
-    docDefinition,
-    pageXMargin,
-    maxLineWidth,
-  } = this;
-  this.clearDoc();
-  let offset = pageXMargin;
-  let prevTextHeight = 0;
-  docDefinition.content.forEach(({ text, fontSize = DEFAULT_FONT_SIZE, align = 'left' }) => {
-    // splitTextToSize takes your string and turns it in to an array of strings,
-    // each of which can be displayed within the specified maxLineWidth.
-    const textLines = doc
-      .setFontSize(fontSize)
-      .splitTextToSize(text, maxLineWidth);
-    offset += prevTextHeight;
-
-    let xMargin = pageXMargin;
-    if (align === 'center') {
-      xMargin = (maxLineWidth + pageXMargin) / 2.0;
-    } else if (align === 'right') {
-      xMargin = maxLineWidth;
-    }
-    const yMargin = offset;
-
-    // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
-    doc.text(xMargin, yMargin, textLines, null, null, align);
-    // Calculate the height of the text very simply:
-    prevTextHeight = textLines.length * doc.getLineHeight();
-    doc.line(0, yMargin, 1000, yMargin);
-  });
-};
