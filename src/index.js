@@ -83,13 +83,17 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   } = this;
   this.clearDoc();
   let yOffset = pageYMargin;
-  // let xOffset = pageXMargin;
+  let xOffset;
   docDefinition.content.forEach(({
     text,
     fontSize = DEFAULT_FONT_SIZE,
     fontName = DEFAULT_FONT_NAME,
     fontStyle = DEFAULT_FONT_STYLE,
     textColor = DEFAULT_TEXT_COLOR,
+    marginTop = 0,
+    marginRight = 0,
+    marginBottom = 0,
+    marginLeft = 0,
     align = DEFAULT_ALIGN,
   }) => {
     if (typeof text === 'object') {
@@ -104,18 +108,19 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       .setFontSize(fontSize)
       .setFont(fontName, fontStyle)
       .setTextColor(textColor)
-      .splitTextToSize(text, maxLineWidth);
-
+      .splitTextToSize(text, maxLineWidth - marginLeft - marginRight);
+    yOffset += marginTop;
     // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
     textLines.forEach((line) => {
-      let xMargin = pageXMargin;
+      xOffset = pageXMargin + marginLeft;
       if (align === 'center') {
-        xMargin = pageWidth / 2.0 - doc.getTextWidth(line) / 2.0;
+        xOffset = pageWidth / 2.0 - doc.getTextWidth(line) / 2.0 + marginLeft - marginRight;
       } else if (align === 'right') {
-        xMargin = pageWidth - doc.getTextWidth(line) - pageXMargin;
+        xOffset = pageWidth - doc.getTextWidth(line) - pageXMargin - marginRight;
       }
-      const { nextYOffset } = this.drawTextInLine(line, xMargin, yOffset, fontSize, 0);
+      const { nextYOffset } = this.drawTextInLine(line, xOffset, yOffset, fontSize, 0);
       yOffset = nextYOffset;
     });
+    yOffset += marginBottom;
   });
 };

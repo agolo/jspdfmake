@@ -1,17 +1,20 @@
 {
   "content": [
     {
-      "text": "|________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________|",
+      "text": "Some large text Some large text Some large text Some large text Some large text Some large text large text Some large text Some large text",
       "fontSize": 10,
-      "align": "center"
+      "align": "center",
+      "marginLeft": 30,
+      "marginRight": 30
     },
     {
-      "text": "abd",
+      "text": "Some large text Some large text Some large text Some large text Some large text Some large text large text Some large text Some large text",
       "fontSize": 20,
       "fontName": "courier",
       "fontStyle": "italic",
       "textColor": "red",
-      "align": "center"
+      "align": "left",
+      "marginLeft": 30
     },
     {
       "text": "|________|",
