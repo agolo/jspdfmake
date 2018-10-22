@@ -39,6 +39,10 @@ JsPdfMake.prototype.clearDoc = function clearDoc() {
   doc.addPage();
 };
 
+JsPdfMake.prototype.isOutOfPageVertically = function isOutOfPageVertically(yOffset) {
+  return yOffset > this.pageHeight - this.pageYMargin;
+};
+
 
 /**
  * @param {String} text The text to be inlined
@@ -109,9 +113,16 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       .setFont(fontName, fontStyle)
       .setTextColor(textColor)
       .splitTextToSize(text, maxLineWidth - marginLeft - marginRight);
+
     yOffset += marginTop;
+
     // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
     textLines.forEach((line) => {
+      if (this.isOutOfPageVertically(yOffset + fontSize)) {
+        // if next line can't be written reset offset and add a new page
+        yOffset = pageYMargin;
+        doc.addPage();
+      }
       xOffset = pageXMargin + marginLeft;
       if (align === 'center') {
         xOffset = pageWidth / 2.0 - doc.getTextWidth(line) / 2.0 + marginLeft - marginRight;
