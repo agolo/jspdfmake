@@ -6,7 +6,7 @@ const DashboardPlugin = require('webpack-dashboard/plugin');
 require('dotenv').config();
 
 module.exports = {
-  entry: path.join(__dirname, '/src/index.js'), // webpack entry point. Module to start building dependency graph
+  entry: path.join(__dirname, '/playground/test.js'), // webpack entry point. Module to start building dependency graph
   mode: 'development',
   output: {
     path: path.join(__dirname, '/dist'), // Folder to store generated bundle
@@ -26,7 +26,7 @@ module.exports = {
   },
   plugins: [ // Array of plugins to apply to build chunk
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, '/src/public/index.html'),
+      template: path.join(__dirname, '/playground/public/index.html'),
       inject: 'body',
     }),
     new webpack.DefinePlugin({
