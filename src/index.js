@@ -6,6 +6,7 @@ import {
   DEFAULT_ALIGN,
   DEFAULT_FONT_NAME,
   DEFAULT_FONT_STYLE,
+  DEFAULT_TEXT_COLOR,
 } from './constants';
 
 export default function JsPdfMake(title, docDefinition) {
@@ -88,6 +89,7 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     fontSize = DEFAULT_FONT_SIZE,
     fontName = DEFAULT_FONT_NAME,
     fontStyle = DEFAULT_FONT_STYLE,
+    textColor = DEFAULT_TEXT_COLOR,
     align = DEFAULT_ALIGN,
   }) => {
     if (typeof text === 'object') {
@@ -101,6 +103,7 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     const textLines = doc
       .setFontSize(fontSize)
       .setFont(fontName, fontStyle)
+      .setTextColor(textColor)
       .splitTextToSize(text, maxLineWidth);
 
     // doc.text can now add those lines easily; otherwise, it would have run text off the screen!

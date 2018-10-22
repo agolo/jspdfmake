@@ -10,17 +10,20 @@
       "fontSize": 20,
       "fontName": "courier",
       "fontStyle": "italic",
+      "textColor": "red",
       "align": "center"
     },
     {
       "text": "|________|",
       "fontSize": 34,
-      "align": "center"
+      "align": "center",
+      "textColor": "rgb(0, 200, 0)"
     },
     {
       "text": "|________|",
       "fontSize": 24,
-      "align": "center"
+      "align": "center",
+      "textColor": "#ccc"
     }
   ]
 }
