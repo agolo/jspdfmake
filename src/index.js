@@ -99,6 +99,7 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     marginBottom = 0,
     marginLeft = 0,
     align = DEFAULT_ALIGN,
+    pageBreak = 'none',
   }) => {
     if (typeof text === 'object') {
       // TODO: HANDLE INLINE TEXT OBJECTS
@@ -113,6 +114,11 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       .setFont(fontName, fontStyle)
       .setTextColor(textColor)
       .splitTextToSize(text, maxLineWidth - marginLeft - marginRight);
+
+    if (pageBreak === 'before') {
+      yOffset = pageYMargin;
+      doc.addPage();
+    }
 
     yOffset += marginTop;
 
@@ -133,5 +139,9 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       yOffset = nextYOffset;
     });
     yOffset += marginBottom;
+    if (pageBreak === 'after') {
+      yOffset = pageYMargin;
+      doc.addPage();
+    }
   });
 };
