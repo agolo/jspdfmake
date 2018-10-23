@@ -23,14 +23,14 @@
   },
   "homepage": "https://github.com/agolo/jspdfmake#readme",
   "dependencies": {
-    "jspdf": "1.4.1",
-    "format-json": "^1.0.3"
+    "format-json": "^1.0.3",
+    "jspdf": "1.4.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "7",
     "babel-preset-env": "^1.7.0",
-    "copy-webpack-plugin": "^4.5.3",
+    "copy-webpack-plugin": "^4.5.4",
     "dotenv": "^6.1.0",
     "eslint": "^5.7.0",
     "eslint-config-airbnb": "^17.1.0",
