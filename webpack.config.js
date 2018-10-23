@@ -31,7 +31,7 @@ const config = {
   mode: ENV,
   output: {
     path: path.join(__dirname, '/dist'), // Folder to store generated bundle
-    filename: 'jspdf.min.js', // Name of generated bundle after build
+    filename: 'jspdfmake.min.js', // Name of generated bundle after build
     publicPath: '/', // public URL of the output directory when referenced in a browser
   },
   devtool: setDevTool(), // Set the devtool
