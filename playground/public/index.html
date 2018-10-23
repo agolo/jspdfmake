@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>jsPDFMake - Playground</title>
+  <style>
+    .container {
+      max-height: 100vh;
+    }
+    .container-flex {
+      display: flex;
+    }
+    #canvas, #editor {
+      height: 90%;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Give it a try!</h1>
+    <div class="container-flex">
+        <div id="editor">
+        </div>
+        <div id="canvas">
+
+        </div>
+    </div>
+  </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        document.editor = ace.edit("editor");
+        document.editor.setTheme("ace/theme/monokai");
+        document.editor.session.setMode("ace/mode/javascript");
+    </script>
+</body>
+</html>

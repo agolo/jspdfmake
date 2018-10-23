@@ -23,7 +23,8 @@
   },
   "homepage": "https://github.com/agolo/jspdfmake#readme",
   "dependencies": {
-    "jspdf": "1.4.1"
+    "jspdf": "1.4.1",
+    "format-json": "^1.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
