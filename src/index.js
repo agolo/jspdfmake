@@ -24,12 +24,8 @@ export default function JsPdfMake(title, docDefinition) {
   this.pageXMargin = 0;
   this.pageYMargin = 0;
   this.maxLineWidth = this.pageWidth - this.pageXMargin * 2;
-  // const oneLineHeight = fontSize * lineHeight / ptsPerInch;
+  this.generateFromDocDefinition();
 }
-
-JsPdfMake.prototype.setDocDefinition = function setDocDefinition(docDefinition) {
-  this.docDefinition = docDefinition;
-};
 
 JsPdfMake.prototype.clearDoc = function clearDoc() {
   const { doc } = this;
@@ -39,10 +35,15 @@ JsPdfMake.prototype.clearDoc = function clearDoc() {
   doc.addPage();
 };
 
+JsPdfMake.prototype.setDocDefinition = function setDocDefinition(docDefinition) {
+  this.docDefinition = docDefinition;
+  this.clearDoc();
+  this.generateFromDocDefinition();
+};
+
 JsPdfMake.prototype.isOutOfPageVertically = function isOutOfPageVertically(yOffset) {
   return yOffset > this.pageHeight - this.pageYMargin;
 };
-
 
 /**
  * @param {String} text The text to be inlined
@@ -72,7 +73,7 @@ JsPdfMake.prototype.drawTextInLine = function drawTextInLine(
     );
   return {
     nextXOffset: xOffset + doc.getTextWidth(`${text} `),
-    nextYOffset: yOffset + fontSize,
+    nextYOffset: yOffset + Math.max(fontSize, maxFontSize),
   };
 };
 
@@ -85,7 +86,6 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     maxLineWidth,
     pageWidth,
   } = this;
-  this.clearDoc();
   let yOffset = pageYMargin;
   let xOffset;
   docDefinition.content.forEach(({
@@ -144,4 +144,8 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       doc.addPage();
     }
   });
+};
+
+JsPdfMake.prototype.download = function download() {
+  this.doc.save();
 };
