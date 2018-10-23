@@ -41,7 +41,7 @@ JsPdfMake.prototype.setDocDefinition = function setDocDefinition(docDefinition) 
   this.generateFromDocDefinition();
 };
 
-JsPdfMake.prototype.isOutOfPageVertically = function isOutOfPageVertically(yOffset) {
+JsPdfMake.prototype.isCursorOutOfPageVertically = function isCursorOutOfPageVertically(yOffset) {
   return yOffset > this.pageHeight - this.pageYMargin;
 };
 
@@ -124,7 +124,7 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
 
     // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
     textLines.forEach((line) => {
-      if (this.isOutOfPageVertically(yOffset + fontSize)) {
+      if (this.isCursorOutOfPageVertically(yOffset + fontSize)) {
         // if next line can't be written reset offset and add a new page
         yOffset = pageYMargin;
         doc.addPage();
