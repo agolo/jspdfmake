@@ -9,7 +9,7 @@ import {
   DEFAULT_TEXT_COLOR,
 } from './constants';
 
-export default function JsPdfMake(title, docDefinition) {
+export default function JsPdfMake(title, docDefinition, options = {}) {
   this.docDefinition = docDefinition;
   this.options = {
     orientation: 'p',
@@ -21,8 +21,8 @@ export default function JsPdfMake(title, docDefinition) {
   this.doc = new JsPDF(this.options).setProperties({ title });
   this.pageWidth = this.doc.internal.pageSize.getWidth();
   this.pageHeight = this.doc.internal.pageSize.getHeight();
-  this.pageXMargin = 0;
-  this.pageYMargin = 0;
+  this.pageXMargin = options.pageXMargin || 0;
+  this.pageYMargin = options.pageYMargin || 0;
   this.maxLineWidth = this.pageWidth - this.pageXMargin * 2;
   this.generateFromDocDefinition();
 }
@@ -35,9 +35,8 @@ JsPdfMake.prototype.clearDoc = function clearDoc() {
   doc.addPage();
 };
 
-JsPdfMake.prototype.setDocDefinition = function setDocDefinition(docDefinition) {
+JsPdfMake.prototype.updateDocDefinition = function updateDocDefinition(docDefinition) {
   this.docDefinition = docDefinition;
-  this.clearDoc();
   this.generateFromDocDefinition();
 };
 
@@ -86,6 +85,7 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     maxLineWidth,
     pageWidth,
   } = this;
+  this.clearDoc();
   let yOffset = pageYMargin;
   let xOffset;
   docDefinition.content.forEach(({
@@ -138,7 +138,9 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       const { nextYOffset } = this.drawTextInLine(line, xOffset, yOffset, fontSize, 0);
       yOffset = nextYOffset;
     });
+
     yOffset += marginBottom;
+
     if (pageBreak === 'after') {
       yOffset = pageYMargin;
       doc.addPage();

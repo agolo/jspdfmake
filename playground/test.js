@@ -3,7 +3,10 @@ import formatJson from 'format-json';
 import JsPdfMake from '../src';
 import example from './examples/example3.json';
 
-const test = new JsPdfMake('My PDF', example);
+const test = new JsPdfMake('My PDF', example, {
+  pageXMargin: 10,
+  pageYMargin: 20,
+});
 const { doc } = test;
 test.generateFromDocDefinition();
 
@@ -29,7 +32,7 @@ editor.getSession().setValue(formatJson.plain(example));
 editor.getSession().on('change', () => {
   try {
     const json = JSON.parse(editor.getSession().getValue());
-    test.setDocDefinition(json);
+    test.updateDocDefinition(json);
     test.generateFromDocDefinition();
     refreshDoc();
   } catch (error) {
