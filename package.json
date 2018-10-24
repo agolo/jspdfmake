@@ -30,12 +30,12 @@
   },
   "homepage": "https://github.com/agolo/jspdfmake#readme",
   "dependencies": {
-    "express": "^4.16.4",
     "jspdf": "1.4.1"
   },
   "devDependencies": {
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-es2015": "^6.24.1",
+    "express": "^4.16.4",
     "format-json": "^1.0.3",
     "livereload": "^0.6.0",
     "nodemon": "^1.18.4",
