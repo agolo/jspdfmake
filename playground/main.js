@@ -1,6 +1,6 @@
 import formatJson from 'format-json';
 import example from './examples/example';
-import { JsPDFMake } from '../dist/jspdfmake.min';
+import { JsPDFMake } from 'jspdfmake';
 
 const test = new JsPDFMake('My PDF', example, {
   pageXMargin: 10,
