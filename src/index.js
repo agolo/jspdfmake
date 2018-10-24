@@ -8,7 +8,7 @@ import {
   DEFAULT_TEXT_COLOR,
 } from './constants';
 
-export default function JsPdfMake(title, docDefinition, options = {}) {
+export default function JsPDFMake(title, docDefinition, options = {}) {
   this.docDefinition = docDefinition;
   this.options = {
     orientation: 'p',
@@ -26,7 +26,7 @@ export default function JsPdfMake(title, docDefinition, options = {}) {
   this.generateFromDocDefinition();
 }
 
-JsPdfMake.prototype.clearDoc = function clearDoc() {
+JsPDFMake.prototype.clearDoc = function clearDoc() {
   const { doc } = this;
   while (doc.internal.pages.length > 1) {
     doc.deletePage(1);
@@ -34,12 +34,12 @@ JsPdfMake.prototype.clearDoc = function clearDoc() {
   doc.addPage();
 };
 
-JsPdfMake.prototype.updateDocDefinition = function updateDocDefinition(docDefinition) {
+JsPDFMake.prototype.updateDocDefinition = function updateDocDefinition(docDefinition) {
   this.docDefinition = docDefinition;
   this.generateFromDocDefinition();
 };
 
-JsPdfMake.prototype.isCursorOutOfPageVertically = function isCursorOutOfPageVertically(yOffset) {
+JsPDFMake.prototype.isCursorOutOfPageVertically = function isCursorOutOfPageVertically(yOffset) {
   return yOffset > this.pageHeight - this.pageYMargin;
 };
 
@@ -51,7 +51,7 @@ JsPdfMake.prototype.isCursorOutOfPageVertically = function isCursorOutOfPageVert
  * @param {Number} maxFontSize The maximum font size in this line.
  * @param {String} align Either 'left', 'right' or 'center', default is 'left'
  */
-JsPdfMake.prototype.drawTextInLine = function drawTextInLine(text, xOffset = 0, yOffset = 0, fontSize = DEFAULT_FONT_SIZE, maxFontSize = 0) {
+JsPDFMake.prototype.drawTextInLine = function drawTextInLine(text, xOffset = 0, yOffset = 0, fontSize = DEFAULT_FONT_SIZE, maxFontSize = 0) {
   const {
     doc,
   } = this;
@@ -65,7 +65,7 @@ JsPdfMake.prototype.drawTextInLine = function drawTextInLine(text, xOffset = 0, 
   };
 };
 
-JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefinition() {
+JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefinition() {
   const {
     doc,
     docDefinition,
@@ -137,6 +137,6 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   });
 };
 
-JsPdfMake.prototype.download = function download() {
+JsPDFMake.prototype.download = function download() {
   this.doc.save();
 };

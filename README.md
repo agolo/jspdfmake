@@ -1,7 +1,7 @@
 
 # jspdfmake
-A wrapper built on top of [jsPdf](https://github.com/MrRio/jsPDF) that provides a fast and easy API to generate large pdf text files. 
-You don't have to worry about math equations or other complex details, just focus on the content and how you want to display it! 
+A wrapper built on top of [jsPdf](https://github.com/MrRio/jsPDF) that provides a fast and easy API to generate large pdf text files.
+You don't have to worry about math equations or other complex details, just focus on the content and how you want to display it!
 
 ## FAQ
 
@@ -47,12 +47,12 @@ const example = {
 	}
 }
 // Create an instance
-const  test  =  new  JsPdfMake('My PDF', example);
+const  test  =  new  JsPDFMake('My PDF', example);
 // Generate the doc from the definition!
-test.generateFromDocDefinition();	
+test.generateFromDocDefinition();
 ```
-No need to go worry about math equations or other complex details, just focus on the content and how you want to display it! 
-    
+No need to go worry about math equations or other complex details, just focus on the content and how you want to display it!
+
 ### How about pdfMake?
-Pdfmake provides an amazing API, it's actually a big inspiration to this library, however when it comes to large file (500+ pages) it becomes too slow up to (5-10min) and if you go (1000+ pages) it might result in a browser crash. This is a known issue that was raised https://github.com/bpampuch/pdfmake/issues/727. 
+Pdfmake provides an amazing API, it's actually a big inspiration to this library, however when it comes to large file (500+ pages) it becomes too slow up to (5-10min) and if you go (1000+ pages) it might result in a browser crash. This is a known issue that was raised https://github.com/bpampuch/pdfmake/issues/727.
 

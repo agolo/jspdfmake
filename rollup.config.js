@@ -13,7 +13,7 @@ export default {
   entry: isProd ? 'src/index.js' : 'playground/main.js',
   dest: isProd ? 'dist/jspdfmake.min.js' : 'playground/public/build/bundle.js',
   moduleName: 'JsPDFMake',
-  format: 'iife',
+  format: isProd ? 'es' : 'es',
   sourceMap: 'inline',
   plugins: [
     resolve({
