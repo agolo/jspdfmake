@@ -65,8 +65,13 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine(text, xOffset = 0, 
   };
 };
 
-JsPDFMake.prototype.escapeCharacters = function escapeCharacters(text) {
-  return text.replace(/[^A-Za-z 0-9 \n\.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
+
+/**
+ * Removes any special characters from the given text
+ * @param {String} text The text to be transformed
+ */
+JsPDFMake.prototype.escapeSpecialCharacters = function escapeSpecialCharacters(text) {
+  return text.replace(/[^A-Za-z 0-9 \n\t\.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
 };
 
 JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefinition() {
@@ -106,7 +111,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       .setFontSize(fontSize)
       .setFont(fontName, fontStyle)
       .setTextColor(textColor)
-      .splitTextToSize(this.escapeCharacters(text), maxLineWidth - marginLeft - marginRight);
+      .splitTextToSize(this.escapeSpecialCharacters(text), maxLineWidth - marginLeft - marginRight);
 
     if (pageBreak === 'before') {
       yOffset = pageYMargin;
