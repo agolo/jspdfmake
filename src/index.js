@@ -1,4 +1,3 @@
-
 import JsPDF from 'jspdf';
 import {
   DEFAULT_FONT_SIZE,
@@ -52,24 +51,14 @@ JsPdfMake.prototype.isCursorOutOfPageVertically = function isCursorOutOfPageVert
  * @param {Number} maxFontSize The maximum font size in this line.
  * @param {String} align Either 'left', 'right' or 'center', default is 'left'
  */
-JsPdfMake.prototype.drawTextInLine = function drawTextInLine(
-  text,
-  xOffset = 0,
-  yOffset = 0,
-  fontSize = DEFAULT_FONT_SIZE,
-  maxFontSize = 0,
-) {
+JsPdfMake.prototype.drawTextInLine = function drawTextInLine(text, xOffset = 0, yOffset = 0, fontSize = DEFAULT_FONT_SIZE, maxFontSize = 0) {
   const {
     doc,
   } = this;
   const center = fontSize / 2.0 + fontSize / 4.0; // The renderer starts drawing text at the center
   doc
     .setFontSize(fontSize)
-    .text(
-      xOffset,
-      center + Math.max(fontSize, maxFontSize) - fontSize + yOffset,
-      text,
-    );
+    .text(xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, text);
   return {
     nextXOffset: xOffset + doc.getTextWidth(`${text} `),
     nextYOffset: yOffset + Math.max(fontSize, maxFontSize),
@@ -103,7 +92,7 @@ JsPdfMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   }) => {
     if (typeof text === 'object') {
       // TODO: HANDLE INLINE TEXT OBJECTS
-      console.warn('Objects are not yet supported as text, this section will not be rendered');
+      // console.warn('Objects are not yet supported as text, this section will not be rendered');
       return;
     }
 
