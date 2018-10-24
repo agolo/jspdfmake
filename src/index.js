@@ -1,5 +1,4 @@
 import JsPDF from 'jspdf';
-import fontInBase64 from './fonts/font';
 import {
   DEFAULT_FONT_SIZE,
   DEFAULT_LINE_HEIGHT,
@@ -19,8 +18,6 @@ export function JsPDFMake(title, docDefinition, options = {}) {
     lineHeight: DEFAULT_LINE_HEIGHT,
   };
   this.doc = new JsPDF(this.options).setProperties({ title });
-  this.doc.addFileToVFS('defaultFont.ttf', fontInBase64);
-  this.doc.addFont('defaultFont.ttf', 'defaultFont', 'normal');
   this.pageWidth = this.doc.internal.pageSize.getWidth();
   this.pageHeight = this.doc.internal.pageSize.getHeight();
   this.pageXMargin = options.pageXMargin || 0;
@@ -109,7 +106,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       .setFontSize(fontSize)
       .setFont(fontName, fontStyle)
       .setTextColor(textColor)
-      .splitTextToSize(text, maxLineWidth - marginLeft - marginRight);
+      .splitTextToSize(this.escapeCharacters(text), maxLineWidth - marginLeft - marginRight);
 
     if (pageBreak === 'before') {
       yOffset = pageYMargin;

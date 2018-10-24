@@ -1,6 +1,6 @@
 import formatJson from 'format-json';
 import example from './examples/example2';
-
+import fontInBase64 from './fonts/font';
 import { JsPDFMake } from '../src';
 
 const test = new JsPDFMake('My PDF', example, {
@@ -9,6 +9,8 @@ const test = new JsPDFMake('My PDF', example, {
 });
 const { doc } = test;
 test.generateFromDocDefinition();
+doc.addFileToVFS('newfont.ttf', fontInBase64);
+doc.addFont('newfont.ttf', 'newfont', 'normal');
 
 // const vals = test.drawTextInLine('|________|', 0, 0, 20, 35);
 // const newVals = test.drawTextInLine('|________|', vals.nextXOffset, 0, 25, 35);
