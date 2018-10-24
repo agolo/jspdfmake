@@ -46,13 +46,7 @@ const example = {
 	   fontStyle: 'neue',
 	}
 }
-// Create an instance
+// Create an instance and Generate the doc from the definition!
 const  test  =  new  JsPDFMake('My PDF', example);
-// Generate the doc from the definition!
-test.generateFromDocDefinition();
 ```
-No need to go worry about math equations or other complex details, just focus on the content and how you want to display it!
-
-### How about pdfMake?
-Pdfmake provides an amazing API, it's actually a big inspiration to this library, however when it comes to large file (500+ pages) it becomes too slow up to (5-10min) and if you go (1000+ pages) it might result in a browser crash. This is a known issue that was raised https://github.com/bpampuch/pdfmake/issues/727.
-
+No need to worry about math equations or other complex details, just focus on the content and how you want to display it!
