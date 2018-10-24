@@ -94,9 +94,9 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     align = DEFAULT_ALIGN,
     pageBreak = 'none',
   }) => {
-    if (typeof text === 'object') {
+    if (typeof text !== 'string') {
       // TODO: HANDLE INLINE TEXT OBJECTS
-      console.warn('Objects are not yet supported as text, this section will not be rendered');
+      console.warn(`Text is only supported as string format, this section will not be rendered => ${text}`);
       return;
     }
 
@@ -106,7 +106,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       .setFontSize(fontSize)
       .setFont(fontName, fontStyle)
       .setTextColor(textColor)
-      .splitTextToSize(text, maxLineWidth - marginLeft - marginRight);
+      .splitTextToSize(this.escapeCharacters(text), maxLineWidth - marginLeft - marginRight);
 
     if (pageBreak === 'before') {
       yOffset = pageYMargin;
