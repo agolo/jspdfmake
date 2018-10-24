@@ -66,7 +66,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine(text, xOffset = 0, 
 };
 
 JsPDFMake.prototype.escapeCharacters = function escapeCharacters(text) {
-  return text.replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
+  return text.replace(/[^A-Za-z 0-9 \n\.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
 };
 
 JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefinition() {
