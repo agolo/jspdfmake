@@ -1,10 +1,11 @@
 import formatJson from 'format-json';
-import example from './examples/example';
-import { JsPDFMake } from 'jspdfmake';
+import example from './examples/example2';
+
+import { JsPDFMake } from '../src';
 
 const test = new JsPDFMake('My PDF', example, {
-  pageXMargin: 10,
-  pageYMargin: 20,
+  pageXMargin: 40,
+  pageYMargin: 40,
 });
 const { doc } = test;
 test.generateFromDocDefinition();

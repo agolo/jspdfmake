@@ -1,4 +1,5 @@
 import JsPDF from 'jspdf';
+import fontInBase64 from './fonts/font';
 import {
   DEFAULT_FONT_SIZE,
   DEFAULT_LINE_HEIGHT,
@@ -18,6 +19,8 @@ export function JsPDFMake(title, docDefinition, options = {}) {
     lineHeight: DEFAULT_LINE_HEIGHT,
   };
   this.doc = new JsPDF(this.options).setProperties({ title });
+  this.doc.addFileToVFS('defaultFont.ttf', fontInBase64);
+  this.doc.addFont('defaultFont.ttf', 'defaultFont', 'normal');
   this.pageWidth = this.doc.internal.pageSize.getWidth();
   this.pageHeight = this.doc.internal.pageSize.getHeight();
   this.pageXMargin = options.pageXMargin || 0;
@@ -65,6 +68,10 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine(text, xOffset = 0, 
   };
 };
 
+JsPDFMake.prototype.escapeCharacters = function escapeCharacters(text) {
+  return text.replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
+};
+
 JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefinition() {
   const {
     doc,
@@ -92,7 +99,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   }) => {
     if (typeof text === 'object') {
       // TODO: HANDLE INLINE TEXT OBJECTS
-      // console.warn('Objects are not yet supported as text, this section will not be rendered');
+      console.warn('Objects are not yet supported as text, this section will not be rendered');
       return;
     }
 

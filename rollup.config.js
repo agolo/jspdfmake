@@ -28,7 +28,7 @@ export default {
         // relative to the current directory, or the name
         // of a module in node_modules
         'node_modules/jspdfmake': ['JsPDFMake']
-      }
+      },
     }),
     eslint({
       exclude: [
@@ -45,9 +45,9 @@ export default {
     (isProd && uglify()),
     // indicate which modules should be treated as external
   ],
-  external: ['jspdf'],
-  globals: {
+  external: (isProd && ['jspdf']),
+  globals: (isProd && {
     jspdf: 'jsPDF'
-  }
+  }),
 };
 
