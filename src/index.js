@@ -106,7 +106,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       .setFontSize(fontSize)
       .setFont(fontName, fontStyle)
       .setTextColor(textColor)
-      .splitTextToSize(this.escapeCharacters(text), maxLineWidth - marginLeft - marginRight);
+      .splitTextToSize(text, maxLineWidth - marginLeft - marginRight);
 
     if (pageBreak === 'before') {
       yOffset = pageYMargin;
