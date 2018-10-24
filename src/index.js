@@ -8,7 +8,7 @@ import {
   DEFAULT_TEXT_COLOR,
 } from './constants';
 
-export default function JsPDFMake(title, docDefinition, options = {}) {
+export function JsPDFMake(title, docDefinition, options = {}) {
   this.docDefinition = docDefinition;
   this.options = {
     orientation: 'p',
