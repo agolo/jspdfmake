@@ -1,5 +1,5 @@
 import formatJson from 'format-json';
-import example from './examples/example2';
+import example from './examples/tableOfContents';
 // import fontInBase64 from './fonts/font';
 import { JsPDFMake } from '../src';
 
@@ -8,7 +8,7 @@ const test = new JsPDFMake('My PDF', example, {
   pageYMargin: 40,
 });
 const { doc } = test;
-test.generateFromDocDefinition();
+// test.generateFromDocDefinition();
 // doc.addFileToVFS('newfont.ttf', fontInBase64);
 // doc.addFont('newfont.ttf', 'newfont', 'normal');
 
