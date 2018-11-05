@@ -28,21 +28,6 @@ export function JsPDFMake(title, docDefinition, options = {}) {
   this.generateFromDocDefinition();
 }
 
-JsPDFMake.prototype.initTOCSections = function initTOCSections() {
-  this.docDefinition.content.filter(item => item.toc).forEach(({toc}) => {
-    this.tocSections[toc.id] = {
-      beforePage: 0,
-      pageBreak: 'none',
-      fontSize: DEFAULT_FONT_SIZE,
-      title: {
-        text: 'Table of content',
-        align: 'center'
-      },
-      items: []
-    };
-  });
-};
-
 JsPDFMake.prototype.clearDoc = function clearDoc() {
   const { doc } = this;
   while (doc.internal.pages.length > 1) {
@@ -72,14 +57,18 @@ JsPDFMake.prototype.isCursorOutOfPageVertically = function isCursorOutOfPageVert
  * @param {Number} maxFontSize The maximum font size in this line.
  * @param {String} align Either 'left', 'right' or 'center', default is 'left'
  */
-JsPDFMake.prototype.drawTextInLine = function drawTextInLine(text, xOffset = 0, yOffset = 0, fontSize = DEFAULT_FONT_SIZE, maxFontSize = 0) {
+JsPDFMake.prototype.drawTextInLine = function drawTextInLine(line, xOffset = 0, yOffset = 0, fontSize = DEFAULT_FONT_SIZE, maxFontSize = 0) {
+  const text = typeof line === 'object' ? line.text : line;
   const {
     doc,
   } = this;
   const center = fontSize / 2.0 + fontSize / 4.0; // The renderer starts drawing text at the center
-  doc
-    .setFontSize(fontSize)
-    .text(xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, text);
+  doc.setFontSize(fontSize);
+  if (line.isLink) {
+    doc.textWithLink(text, xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, line.linkOptions);
+  } else {
+    doc.text(xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, text);
+  }
   return {
     nextXOffset: xOffset + doc.getTextWidth(`${text} `),
     nextYOffset: yOffset + Math.max(fontSize, maxFontSize),
@@ -198,6 +187,20 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph(params, xOffset, 
 
 };
 
+JsPDFMake.prototype.initTOCSections = function initTOCSections() {
+  this.docDefinition.content.filter(item => item.toc).forEach(({toc}) => {
+    this.tocSections[toc.id] = {
+      beforePage: 0,
+      items: [],
+      options: toc,
+    };
+  });
+};
+
+JsPDFMake.prototype.renderTOCSections = function renderTOCSections() {
+  console.log(this.tocSections);
+};
+
 JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefinition() {
   const {
     tocSections,
@@ -222,7 +225,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       xOffset = nextXOffset;
     }
   });
-  console.log(this.tocSections);
+  this.renderTOCSections(xOffset, yOffset);
   // this.doc.insertPage(2);
   // this.doc.setPage(2);
   // this.doc.textWithLink('Page 1', 10, 20, { pageNumber: 1 });
