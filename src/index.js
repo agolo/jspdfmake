@@ -209,17 +209,17 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   let yOffset = pageYMargin;
   let xOffset;
   docDefinition.content.forEach((params) => {
-    if (params.text) {
-      const { nextXOffset, nextYOffset } = this.renderParagraph(params, xOffset, yOffset);
-      yOffset = nextYOffset;
-      xOffset = nextXOffset;
-    } else if (params.toc) {
+    if (params.toc) {
       const tocSection = tocSections[params.toc.id];
       tocSection.beforePage = this.getCurrentPageNumber() + 1;
       if (yOffset === pageYMargin) {
         // yOffset is still at the top, so nothing has been written to this page yet => use it as TOC
         tocSection.beforePage -= 1;
       }
+    } else if (params.text) {
+      const { nextXOffset, nextYOffset } = this.renderParagraph(params, xOffset, yOffset);
+      yOffset = nextYOffset;
+      xOffset = nextXOffset;
     }
   });
   console.log(this.tocSections);
