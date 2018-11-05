@@ -11,7 +11,7 @@ app.use('/build', express.static(`${__dirname}/public/build`));
 
 // send the user to index html page inspite of the url
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '/public/index.html'));
+  res.sendFile(path.resolve(__dirname, '/index.html'));
 });
 
-app.listen(port);
+app.listen(port, () => console.log(`Server listening on ${port}`));
