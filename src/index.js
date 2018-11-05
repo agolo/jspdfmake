@@ -102,7 +102,6 @@ JsPDFMake.prototype.renderParagraphLines = function renderParagraphLines(textLin
   marginBottom = 0,
   marginLeft = 0,
   align = DEFAULT_ALIGN,
-  pageBreak = 'none',
 }) {
   const {
     doc,
@@ -111,10 +110,7 @@ JsPDFMake.prototype.renderParagraphLines = function renderParagraphLines(textLin
     pageWidth,
   } = this;
 
-  if (pageBreak === 'before') {
-    yOffset = pageYMargin;
-    doc.addPage();
-  }
+
 
   yOffset += marginTop;
 
@@ -137,26 +133,28 @@ JsPDFMake.prototype.renderParagraphLines = function renderParagraphLines(textLin
 
   yOffset += marginBottom;
 
-  if (pageBreak === 'after') {
-    yOffset = pageYMargin;
-    doc.addPage();
-  }
+
   return { nextXOffset: xOffset, nextYOffset: yOffset };
 };
 
 JsPDFMake.prototype.renderParagraph = function renderParagraph(params, xOffset, yOffset) {
   const {
     text,
+    pageBreak = 'none',
     fontSize = DEFAULT_FONT_SIZE,
     fontName = DEFAULT_FONT_NAME,
     fontStyle = DEFAULT_FONT_STYLE,
     textColor = DEFAULT_TEXT_COLOR,
     marginRight = 0,
     marginLeft = 0,
+    tocIds = [],
+    tocTitle,
   } = params;
   const {
     doc,
     maxLineWidth,
+    pageYMargin,
+    tocSections,
   } = this;
 
   if (typeof text !== 'string') {
@@ -164,6 +162,24 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph(params, xOffset, 
     console.warn(`Text is only supported as string format, this section will not be rendered => ${text}`);
     return;
   }
+  if (pageBreak === 'before') {
+    yOffset = pageYMargin;
+    doc.addPage();
+  }
+
+  if (this.isCursorOutOfPageVertically(yOffset + fontSize)) {
+    // if next line can't be written reset offset and add a new page
+    yOffset = pageYMargin;
+    doc.addPage();
+  }
+
+  tocIds.forEach(tocId => {
+    const section = tocSections[tocId];
+    section.items.push({
+      text: tocTitle || text.split(' ')[0],
+      pageNumber: this.getCurrentPageNumber(),
+    });
+  });
 
   // splitTextToSize takes your string and turns it in to an array of strings,
   // each of which can be displayed within the specified maxLineWidth.
@@ -172,6 +188,11 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph(params, xOffset, 
     .setFont(fontName, fontStyle)
     .setTextColor(textColor)
     .splitTextToSize(this.escapeSpecialCharacters(text), maxLineWidth - marginLeft - marginRight);
+
+  if (pageBreak === 'after') {
+    yOffset = pageYMargin;
+    doc.addPage();
+  }
 
   return this.renderParagraphLines(textLines, xOffset, yOffset, params);
 
@@ -202,8 +223,9 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     }
   });
   console.log(this.tocSections);
-  // doc.setPage(2);
-  // doc.addPage();
+  // this.doc.insertPage(2);
+  // this.doc.setPage(2);
+  // this.doc.textWithLink('Page 1', 10, 20, { pageNumber: 1 });
 };
 
 JsPDFMake.prototype.download = function download() {
