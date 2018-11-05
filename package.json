@@ -10,7 +10,7 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "dev": "NODE_ENV=development rollup -c --watch",
-    "reload": "livereload 'playground/build'",
+    "reload": "livereload 'playground/public/' -d",
     "server": "nodemon playground/server.js",
     "watch": "npm-run-all --parallel reload dev",
     "test": "echo \"Error: no test specified\" && exit 1"
