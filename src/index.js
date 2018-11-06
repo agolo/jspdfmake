@@ -151,21 +151,17 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph(params, xOffset, 
     console.warn(`Text is only supported as string format, this section will not be rendered => ${text}`);
     return;
   }
-  if (pageBreak === 'before') {
+  if (pageBreak === 'before' || this.isCursorOutOfPageVertically(yOffset + fontSize)) {
+    // if page break before or next line can't be written reset offset and add a new page
     yOffset = pageYMargin;
     doc.addPage();
   }
 
-  if (this.isCursorOutOfPageVertically(yOffset + fontSize)) {
-    // if next line can't be written reset offset and add a new page
-    yOffset = pageYMargin;
-    doc.addPage();
-  }
-
+  // Insert this paragraph to its toc sections if any
   tocIds.forEach(tocId => {
     const section = tocSections[tocId];
     section.items.push({
-      text: tocTitle || text.split(' ')[0],
+      title: tocTitle || text,
       pageNumber: this.getCurrentPageNumber(),
     });
   });
@@ -187,17 +183,19 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph(params, xOffset, 
 
 };
 
-JsPDFMake.prototype.initTOCSections = function initTOCSections() {
+JsPDFMake.prototype.initTOC = function initTOC() {
   this.docDefinition.content.filter(item => item.toc).forEach(({toc}) => {
+    const options = Object.assign({}, toc); // deep clone toc
+    delete options.id;
     this.tocSections[toc.id] = {
       beforePage: 0,
       items: [],
-      options: toc,
+      options,
     };
   });
 };
 
-JsPDFMake.prototype.renderTOCSections = function renderTOCSections() {
+JsPDFMake.prototype.renderTOC = function renderTOC() {
   console.log(this.tocSections);
 };
 
@@ -208,7 +206,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
     pageYMargin,
   } = this;
   this.clearDoc();
-  this.initTOCSections();
+  this.initTOC();
   let yOffset = pageYMargin;
   let xOffset;
   docDefinition.content.forEach((params) => {
@@ -225,7 +223,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       xOffset = nextXOffset;
     }
   });
-  this.renderTOCSections(xOffset, yOffset);
+  this.renderTOC(xOffset, yOffset);
   // this.doc.insertPage(2);
   // this.doc.setPage(2);
   // this.doc.textWithLink('Page 1', 10, 20, { pageNumber: 1 });
