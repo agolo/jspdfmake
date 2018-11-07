@@ -86,12 +86,15 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine(line, xOffset = 0, 
   } else {
     doc.text(xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, text);
   }
-  return {
-    nextXOffset: xOffset + doc.getTextWidth(`${text} `),
-    nextYOffset: yOffset + Math.max(fontSize, maxFontSize),
-  };
+  return true;
 };
 
+JsPDFMake.prototype.drawParagraphs = function drawParagraphs(paragraphs) {
+  let currentPage = paragraphs[0][0].pageNumber;
+  paragraphs.forEach(paragraph => paragraph.forEach(() => {
+
+  }));
+};
 
 /**
  * Removes any special characters from the given text
@@ -101,76 +104,41 @@ JsPDFMake.prototype.escapeSpecialCharacters = function escapeSpecialCharacters(t
   return text.replace(/[^A-Za-z 0-9 \n\t\.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
 };
 
-JsPDFMake.prototype.renderParagraphLines = function renderParagraphLines(textLines, xOffset, yOffset, {
+JsPDFMake.prototype.renderParagraph = function renderParagraph({
+  text,
+  pageBreak = 'none',
   fontSize = DEFAULT_FONT_SIZE,
+  fontName = DEFAULT_FONT_NAME,
+  fontStyle = DEFAULT_FONT_STYLE,
+  textColor = DEFAULT_TEXT_COLOR,
+  align = DEFAULT_ALIGN,
   marginTop = 0,
   marginRight = 0,
   marginBottom = 0,
   marginLeft = 0,
-  align = DEFAULT_ALIGN,
-}) {
+  tocIds = [],
+  tocTitle,
+}, xOffset, yOffset, pageNumber) {
+
   const {
     doc,
+    maxLineWidth,
+    tocSections,
     pageXMargin,
     pageYMargin,
     pageWidth,
   } = this;
 
-
-  yOffset += marginTop;
-
-  // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
-  textLines.forEach((line) => {
-    if (this.isCursorOutOfPageVertically(yOffset + fontSize)) {
-      // if next line can't be written reset offset and add a new page
-      yOffset = pageYMargin;
-      this.addPage();
-    }
-    xOffset = pageXMargin + marginLeft;
-    if (align === 'center') {
-      xOffset = pageWidth / 2.0 - doc.getTextWidth(line) / 2.0 + marginLeft - marginRight;
-    } else if (align === 'right') {
-      xOffset = pageWidth - doc.getTextWidth(line) - pageXMargin - marginRight;
-    }
-    const { nextYOffset } = this.drawTextInLine(line, xOffset, yOffset, fontSize, 0);
-    yOffset = nextYOffset;
-  });
-
-  yOffset += marginBottom;
-
-
-  return { nextXOffset: xOffset, nextYOffset: yOffset };
-};
-
-JsPDFMake.prototype.renderParagraph = function renderParagraph(params, xOffset, yOffset) {
-  const {
-    text,
-    pageBreak = 'none',
-    fontSize = DEFAULT_FONT_SIZE,
-    fontName = DEFAULT_FONT_NAME,
-    fontStyle = DEFAULT_FONT_STYLE,
-    textColor = DEFAULT_TEXT_COLOR,
-    marginRight = 0,
-    marginLeft = 0,
-    tocIds = [],
-    tocTitle,
-  } = params;
-  const {
-    doc,
-    maxLineWidth,
-    pageYMargin,
-    tocSections,
-  } = this;
-
   if (typeof text !== 'string') {
     // TODO: HANDLE INLINE TEXT OBJECTS
     console.warn(`Text is only supported as string format, this section will not be rendered => ${text}`);
-    return;
+    return { nextXOffset: xOffset, nextYOffset: yOffset, nextPage: pageNumber, lines };
   }
   if (pageBreak === 'before' || this.isCursorOutOfPageVertically(yOffset + fontSize)) {
     // if page break before or next line can't be written reset offset and add a new page
     yOffset = pageYMargin;
-    this.addPage();
+    // this.addPage();
+    pageNumber += 1;
   }
 
   // Insert this paragraph to its toc sections if any
@@ -190,38 +158,66 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph(params, xOffset, 
     .setTextColor(textColor)
     .splitTextToSize(this.escapeSpecialCharacters(text), maxLineWidth - marginLeft - marginRight);
 
+  yOffset += marginTop;
+
+  const lines = [];
+
+  // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
+  textLines.forEach((line) => {
+    if (this.isCursorOutOfPageVertically(yOffset + fontSize)) {
+      // if next line can't be written reset offset and add a new page
+      yOffset = pageYMargin;
+      // this.addPage();
+      pageNumber += 1;
+    }
+    xOffset = pageXMargin + marginLeft;
+    if (align === 'center') {
+      xOffset = pageWidth / 2.0 - doc.getTextWidth(line) / 2.0 + marginLeft - marginRight;
+    } else if (align === 'right') {
+      xOffset = pageWidth - doc.getTextWidth(line) - pageXMargin - marginRight;
+    }
+    lines.push({
+      text,
+      fontSize,
+      fontName,
+      fontStyle,
+      textColor,
+      xOffset,
+      yOffset,
+      pageNumber,
+    });
+    yOffset = yOffset + fontSize;
+    // TODO USE THIS IF CURSOR IS STILL IN THE SAME LINE
+    // yOffset = yOffset + Math.max(fontSize, maxFontSize);
+    // xOffset = xOffset + doc.getTextWidth(`${text} `);
+  });
+
+  yOffset += marginBottom;
+
   if (pageBreak === 'after') {
     yOffset = pageYMargin;
-    this.addPage();
+    // this.addPage();
+    pageNumber += 1;
   }
 
-  return this.renderParagraphLines(textLines, xOffset, yOffset, params);
+  return { nextXOffset: xOffset, nextYOffset: yOffset, nextPage: pageNumber, lines };
 
 };
 
-JsPDFMake.prototype.renderContent = function renderContent(content, startPage = 1) {
-  const {
-    doc,
-    tocSections,
-    pageYMargin,
-  } = this;
-  doc.setPage(startPage);
-  let yOffset = pageYMargin;
+JsPDFMake.prototype.transformContentToDrawables = function transformContentToDrawables(content) {
+  let yOffset = this.pageYMargin;
   let xOffset;
-  content.forEach((params) => {
+  let currentPage = 1;
+  return content.map((params) => {
     if (params.toc) {
-      const tocSection = tocSections[params.toc.id];
-      tocSection.startingPage = this.getCurrentPageNumber() + 1;
-      if (yOffset === pageYMargin) {
-        // yOffset is still at the top, so nothing has been written to this page yet => use it as TOC
-        tocSection.startingPage -= 1;
-      }
-    } else if (params.text) {
-      const { nextXOffset, nextYOffset } = this.renderParagraph(params, xOffset, yOffset);
-      yOffset = nextYOffset;
-      xOffset = nextXOffset;
+      return;
     }
-  });
+    const { nextXOffset, nextYOffset, nextPage, lines } = this.renderParagraph(params, xOffset, yOffset, currentPage);
+    yOffset = nextYOffset;
+    xOffset = nextXOffset;
+    currentPage = nextPage;
+    return lines;
+  }).filter(a => a);
 };
 
 JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefinition() {
@@ -230,8 +226,10 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   } = this;
   this.clearDoc();
   this.initTOC();
-  this.renderContent(docDefinition.content);
-  this.renderTOC();
+  const drawableParagraphs = this.transformContentToDrawables(docDefinition.content); // Array of Paragraph where a Paragaph is an Array of Lines
+  console.log(drawableParagraphs);
+  this.drawParagraphs(drawableParagraphs);
+  // this.renderTOC();
   // this.doc.insertPage(2);
   // this.doc.setPage(2);
   // this.doc.textWithLink('Page 1', 10, 20, { pageNumber: 1 });
