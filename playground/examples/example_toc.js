@@ -25,8 +25,7 @@ const example = {
       id: 'endToc',  // default is mainToc
       title: {
         text: 'Table of content',
-        style: 'header',
-        align: 'Center'
+        align: 'left'
       }
     },
   }]
