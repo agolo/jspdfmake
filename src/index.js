@@ -74,15 +74,29 @@ JsPDFMake.prototype.isCursorOutOfPageVertically = function isCursorOutOfPageVert
  * @param {Number} maxFontSize The maximum font size in this line.
  * @param {String} align Either 'left', 'right' or 'center', default is 'left'
  */
-JsPDFMake.prototype.drawTextInLine = function drawTextInLine(line, xOffset = 0, yOffset = 0, fontSize = DEFAULT_FONT_SIZE, maxFontSize = 0) {
-  const text = typeof line === 'object' ? line.text : line;
+JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
+  text,
+  fontSize,
+  fontName,
+  fontStyle,
+  textColor,
+  xOffset,
+  yOffset,
+  pageNumber,
+  maxFontSize,
+  isLink,
+}) {
   const {
     doc,
   } = this;
   const center = fontSize / 2.0 + fontSize / 4.0; // The renderer starts drawing text at the center
-  doc.setFontSize(fontSize);
-  if (line.isLink) {
-    doc.textWithLink(text, xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, { pageNumber: line.pageNumber });
+  doc
+    .setPage(pageNumber)
+    .setFont(fontName, fontStyle)
+    .setFontSize(fontSize)
+    .setTextColor(textColor);
+  if (isLink) {
+    doc.textWithLink(text, xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, { pageNumber });
   } else {
     doc.text(xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, text);
   }
@@ -90,9 +104,11 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine(line, xOffset = 0, 
 };
 
 JsPDFMake.prototype.drawParagraphs = function drawParagraphs(paragraphs) {
-  let currentPage = paragraphs[0][0].pageNumber;
-  paragraphs.forEach(paragraph => paragraph.forEach(() => {
-
+  paragraphs.forEach(paragraph => paragraph.forEach(line => {
+    while (line.pageNumber > this.size()) {
+      this.addPage();
+    }
+    this.drawTextInLine(line);
   }));
 };
 
@@ -153,8 +169,8 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   // splitTextToSize takes your string and turns it in to an array of strings,
   // each of which can be displayed within the specified maxLineWidth.
   const textLines = doc
-    .setFontSize(fontSize)
     .setFont(fontName, fontStyle)
+    .setFontSize(fontSize)
     .setTextColor(textColor)
     .splitTextToSize(this.escapeSpecialCharacters(text), maxLineWidth - marginLeft - marginRight);
 
@@ -177,7 +193,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       xOffset = pageWidth - doc.getTextWidth(line) - pageXMargin - marginRight;
     }
     lines.push({
-      text,
+      text: line,
       fontSize,
       fontName,
       fontStyle,
@@ -185,6 +201,8 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       xOffset,
       yOffset,
       pageNumber,
+      maxFontSize: fontSize,
+      isLink: false,
     });
     yOffset = yOffset + fontSize;
     // TODO USE THIS IF CURSOR IS STILL IN THE SAME LINE
