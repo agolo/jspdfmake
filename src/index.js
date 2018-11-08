@@ -137,6 +137,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   tocTitle,
   isLink = false,
   linkPage,
+  linkParagraphIndex,
 }, xOffset, yOffset, pageNumber, index) {
 
   const {
@@ -207,6 +208,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       maxFontSize: fontSize,
       isLink,
       linkPage,
+      linkParagraphIndex,
     });
     yOffset = yOffset + fontSize;
     // TODO USE THIS IF CURSOR IS STILL IN THE SAME LINE
@@ -226,13 +228,13 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
 
 };
 
-JsPDFMake.prototype.transformContentToDrawables = function transformContentToDrawables(content) {
+JsPDFMake.prototype.transformContentToDrawableParagraphs = function transformContentToDrawableParagraphs(content) {
   let yOffset = this.pageYMargin;
   let xOffset;
   let currentPage = 1;
   return content.map((params, index) => {
     if (params.toc) {
-      return { lines: [], isToc: true, id: params.toc.id };
+      return { isToc: true, id: params.toc.id };
     }
     const { nextXOffset, nextYOffset, nextPage, lines } = this.renderParagraph(params, xOffset, yOffset, currentPage, index);
     yOffset = nextYOffset;
@@ -248,10 +250,29 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   } = this;
   this.clearDoc();
   this.initTOC();
-  const drawableParagraphs = this.transformContentToDrawables(docDefinition.content); // Array of Paragraph where a Paragaph is an Array of Lines
-  console.log(drawableParagraphs);
-  console.log(this.tocSections);
-  this.drawParagraphs(drawableParagraphs);
+  const paragraphs = this.transformContentToDrawableParagraphs(docDefinition.content); // Array of Paragraph where a Paragaph is an Array of Lines
+  const {
+    tocSections,
+  } = this;
+  Object.entries(tocSections).forEach(([tocSection, tocId]) => {
+    const content = this.transformTOCToContent(tocSection);
+    const tocParagraphs = this.transformContentToDrawableParagraphs(content);
+    console.log(drawableTOC);
+
+
+    // Merge tocParagraphs into the current paragraphs
+    let lastPage = 0;
+    paragraphs.forEach((p) => {
+      if (p.isToc && p.id === tocId) {
+        // p.lines =
+      }
+    });
+  });
+
+  // console.log(paragraphs);
+  // console.log(this.tocSections);
+  // this.drawParagraphs(paragraphs);
+
   // this.renderTOC();
   // this.doc.insertPage(2);
   // this.doc.setPage(2);
