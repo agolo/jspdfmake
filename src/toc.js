@@ -6,25 +6,19 @@ JsPDFMake.prototype.initTOC = function initTOC() {
     const options = Object.assign({}, toc); // deep clone toc
     delete options.id;
     this.tocSections[toc.id] = {
-      startingPage: 0,
       items: [],
       options,
     };
   });
 };
 
-JsPDFMake.prototype.transformTOCToContent = function transformTOCToContent() {
-  const {
-    tocSections,
-  } = this;
-  const sections = Object.values(tocSections);
-  sections.forEach(section => {
-    const { startingPage, items } = section;
-    items.forEach(({ title, pageNumber }) => {
-      sections.forEach(({ startingPage, size }) => pageNumber >= startingPage && (pageNumber += size) ); // Update item offset based on the number of pages added for the previous sections
-      this.drawTextInLine({ isLink: true, text: `${title} ${pageNumber}`, pageNumber }, xOffset, yOffset, 18, 18);
-      yOffset += 20;
-    });
+JsPDFMake.prototype.transformTOCToContent = function transformTOCToContent(section) {
+  const { options, items } = section;
+  const content = [options.title];
+  items.forEach(({ title, paragraphIndex }) => {
+    const tocItem = Object.assign({ text: title, isLink: true, linkParagrphIndex: paragraphIndex }, options);
+    delete tocItem.title;
+    content.push(tocItem);
   });
-  console.log(tocSections);
+  return content;
 };
