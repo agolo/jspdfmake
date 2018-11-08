@@ -13,20 +13,13 @@ JsPDFMake.prototype.initTOC = function initTOC() {
   });
 };
 
-JsPDFMake.prototype.renderTOC = function renderTOC() {
+JsPDFMake.prototype.transformTOCToContent = function transformTOCToContent() {
   const {
-    doc,
-    pageYMargin,
     tocSections,
   } = this;
   const sections = Object.values(tocSections);
   sections.forEach(section => {
     const { startingPage, items } = section;
-    let yOffset = pageYMargin;
-    let xOffset;
-    doc.setPage(startingPage);
-    this.addPage();
-    section.size = 1;
     items.forEach(({ title, pageNumber }) => {
       sections.forEach(({ startingPage, size }) => pageNumber >= startingPage && (pageNumber += size) ); // Update item offset based on the number of pages added for the previous sections
       this.drawTextInLine({ isLink: true, text: `${title} ${pageNumber}`, pageNumber }, xOffset, yOffset, 18, 18);

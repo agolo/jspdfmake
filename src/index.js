@@ -85,6 +85,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
   pageNumber,
   maxFontSize,
   isLink,
+  linkPage,
 }) {
   const {
     doc,
@@ -96,7 +97,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
     .setFontSize(fontSize)
     .setTextColor(textColor);
   if (isLink) {
-    doc.textWithLink(text, xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, { pageNumber });
+    doc.textWithLink(text, xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, { pageNumber: linkPage });
   } else {
     doc.text(xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, text);
   }
@@ -104,7 +105,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
 };
 
 JsPDFMake.prototype.drawParagraphs = function drawParagraphs(paragraphs) {
-  paragraphs.forEach(paragraph => paragraph.forEach(line => {
+  paragraphs.forEach(({ lines }) => lines.forEach(line => {
     while (line.pageNumber > this.size()) {
       this.addPage();
     }
@@ -134,7 +135,9 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   marginLeft = 0,
   tocIds = [],
   tocTitle,
-}, xOffset, yOffset, pageNumber) {
+  isLink = false,
+  linkPage,
+}, xOffset, yOffset, pageNumber, index) {
 
   const {
     doc,
@@ -157,12 +160,12 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
     pageNumber += 1;
   }
 
-  // Insert this paragraph to its toc sections if any
+  // Insert this paragraph to its toc section if any
   tocIds.forEach(tocId => {
-    const section = tocSections[tocId];
-    section.items.push({
+    const sectionItems = tocSections[tocId].items;
+    sectionItems.push({
       title: tocTitle || text,
-      pageNumber: this.getCurrentPageNumber(),
+      paragraphIndex: index,
     });
   });
 
@@ -202,7 +205,8 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       yOffset,
       pageNumber,
       maxFontSize: fontSize,
-      isLink: false,
+      isLink,
+      linkPage,
     });
     yOffset = yOffset + fontSize;
     // TODO USE THIS IF CURSOR IS STILL IN THE SAME LINE
@@ -226,15 +230,15 @@ JsPDFMake.prototype.transformContentToDrawables = function transformContentToDra
   let yOffset = this.pageYMargin;
   let xOffset;
   let currentPage = 1;
-  return content.map((params) => {
+  return content.map((params, index) => {
     if (params.toc) {
-      return;
+      return { lines: [], isToc: true, id: params.toc.id };
     }
-    const { nextXOffset, nextYOffset, nextPage, lines } = this.renderParagraph(params, xOffset, yOffset, currentPage);
+    const { nextXOffset, nextYOffset, nextPage, lines } = this.renderParagraph(params, xOffset, yOffset, currentPage, index);
     yOffset = nextYOffset;
     xOffset = nextXOffset;
     currentPage = nextPage;
-    return lines;
+    return { lines };
   }).filter(a => a);
 };
 
@@ -246,6 +250,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   this.initTOC();
   const drawableParagraphs = this.transformContentToDrawables(docDefinition.content); // Array of Paragraph where a Paragaph is an Array of Lines
   console.log(drawableParagraphs);
+  console.log(this.tocSections);
   this.drawParagraphs(drawableParagraphs);
   // this.renderTOC();
   // this.doc.insertPage(2);
