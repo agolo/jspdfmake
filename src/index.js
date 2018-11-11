@@ -105,7 +105,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
 };
 
 JsPDFMake.prototype.drawParagraphs = function drawParagraphs(paragraphs) {
-  paragraphs.forEach(({ lines }) => lines.forEach(line => {
+  paragraphs.forEach(({ lines = [] }) => lines.forEach(line => {
     while (line.pageNumber > this.size()) {
       this.addPage();
     }
@@ -139,7 +139,6 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   linkPage,
   linkParagraphIndex,
 }, xOffset, yOffset, pageNumber, index) {
-
   const {
     doc,
     maxLineWidth,
@@ -163,8 +162,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
 
   // Insert this paragraph to its toc section if any
   tocIds.forEach(tocId => {
-    const sectionItems = tocSections[tocId].items;
-    sectionItems.push({
+    tocSections[tocId].items.push({
       title: tocTitle || text,
       paragraphIndex: index,
     });
@@ -254,29 +252,20 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   const {
     tocSections,
   } = this;
-  Object.entries(tocSections).forEach(([tocSection, tocId]) => {
+  Object.entries(tocSections).forEach(([tocId, tocSection]) => {
     const content = this.transformTOCToContent(tocSection);
     const tocParagraphs = this.transformContentToDrawableParagraphs(content);
-    console.log(drawableTOC);
-
-
+  
     // Merge tocParagraphs into the current paragraphs
-    let lastPage = 0;
     paragraphs.forEach((p) => {
       if (p.isToc && p.id === tocId) {
-        // p.lines =
+        p.lines = tocParagraphs.map(p => p.lines).flat();
       }
     });
   });
+ 
+  this.drawParagraphs(this.updateTOCLinks(paragraphs));
 
-  // console.log(paragraphs);
-  // console.log(this.tocSections);
-  // this.drawParagraphs(paragraphs);
-
-  // this.renderTOC();
-  // this.doc.insertPage(2);
-  // this.doc.setPage(2);
-  // this.doc.textWithLink('Page 1', 10, 20, { pageNumber: 1 });
 };
 
 JsPDFMake.prototype.download = function download() {
