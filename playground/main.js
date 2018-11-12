@@ -1,5 +1,5 @@
 import formatJson from 'format-json';
-import example from './examples/example_toc1';
+import example from './examples/example_toc';
 // import fontInBase64 from './fonts/font';
 import { JsPDFMake } from '../src';
 

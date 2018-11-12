@@ -54,7 +54,7 @@ JsPDFMake.prototype.updateTOCLinks =  function updateTOCLinks(paragraphs) {
   // Link all linked lines to the correct paragraph's first line
   paragraphs.forEach((p) => {
     p.lines.forEach(line => {
-      if (line.linkParagraphIndex) {
+      if (line.linkParagraphIndex >= 0) {
         line.linkPage = paragraphs[line.linkParagraphIndex].lines[0].pageNumber;
       }
     });
