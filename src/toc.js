@@ -3,6 +3,9 @@ import { JsPDFMake } from './index';
 
 JsPDFMake.prototype.initTOC = function initTOC() {
   this.docDefinition.content.filter(item => item.toc).forEach(({toc}) => {
+    if (this.tocSections[toc.id]) {
+      throw new Error(`Duplicate table of contents id '${toc.id}', please make sure all table of contents have a uniq id`);
+    }
     const options = Object.assign({}, toc); // deep clone toc
     delete options.id;
     this.tocSections[toc.id] = {
@@ -26,7 +29,7 @@ JsPDFMake.prototype.transformTOCToContent = function transformTOCToContent(secti
 JsPDFMake.prototype.updateTOCLinks =  function updateTOCLinks(paragraphs) {
   let tocParagraphsSize = 0;
   let lastPage = 0;
-  
+
   // Loop on all paragraphs
   paragraphs.forEach((p) => {
     let paragraphSize = 0;
@@ -37,14 +40,14 @@ JsPDFMake.prototype.updateTOCLinks =  function updateTOCLinks(paragraphs) {
         line.pageNumber += lastPage;
       });
       // Increase the size of the table of contents paragraph by this toc size
-      tocParagraphsSize += paragraphSize;  
+      tocParagraphsSize += paragraphSize;
     } else {
       // If it's a normal paragraph then increase it's page number with the tocParagraphSize to shift it down
       p.lines.forEach(line => {
         line.pageNumber += tocParagraphsSize;
         // Update the last page
         lastPage = line.pageNumber;
-      });  
+      });
     }
   });
 
@@ -56,6 +59,6 @@ JsPDFMake.prototype.updateTOCLinks =  function updateTOCLinks(paragraphs) {
       }
     });
   });
-  
+
   return paragraphs;
 };

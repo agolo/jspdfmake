@@ -162,6 +162,9 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
 
   // Insert this paragraph to its toc section if any
   tocIds.forEach(tocId => {
+    if (!tocSections[tocId]) {
+      throw new Error(`Unknown table of contents id '${tocId}'`);
+    }
     tocSections[tocId].items.push({
       title: tocTitle || text,
       paragraphIndex: index,
@@ -255,7 +258,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   Object.entries(tocSections).forEach(([tocId, tocSection]) => {
     const content = this.transformTOCToContent(tocSection);
     const tocParagraphs = this.transformContentToDrawableParagraphs(content);
-  
+
     // Merge tocParagraphs into the current paragraphs
     paragraphs.forEach((p) => {
       if (p.isToc && p.id === tocId) {
@@ -263,9 +266,8 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
       }
     });
   });
- 
-  this.drawParagraphs(this.updateTOCLinks(paragraphs));
 
+  this.drawParagraphs(this.updateTOCLinks(paragraphs));
 };
 
 JsPDFMake.prototype.download = function download() {
