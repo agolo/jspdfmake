@@ -8,7 +8,9 @@ const example = {
         fontStyle: 'bold',
         fontSize: 23,
       },
-      fontSize: 18,
+      itemOptions: {
+        fontSize: 18,
+      },
     },
   }],
 };
@@ -18,7 +20,7 @@ example.content = example.content.concat(Array(100).fill().map((a, i) => ({
   fontSize: 20,
   align: 'center',
   tocIds: ['mainToc', 'endToc'],
-  tocTitle: `Paragraph ${i + 1}`,
+  tocItemText: `Paragraph ${i + 1}`,
   pageBreak: 'after',
 })));
 
@@ -31,7 +33,9 @@ example.content.push({
       fontStyle: 'bold',
       fontSize: 23,
     },
-    fontSize: 18,
+    itemOptions: {
+      fontSize: 18,
+    },
   },
 });
 

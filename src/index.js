@@ -134,7 +134,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   marginBottom = 0,
   marginLeft = 0,
   tocIds = [],
-  tocTitle,
+  tocItemText,
   isLink = false,
   linkPage,
   linkParagraphIndex,
@@ -166,7 +166,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       throw new Error(`Unknown table of contents id '${tocId}'`);
     }
     tocSections[tocId].items.push({
-      title: tocTitle || text,
+      title: tocItemText || text,
       paragraphIndex: index,
     });
   });

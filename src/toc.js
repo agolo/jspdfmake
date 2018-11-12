@@ -20,8 +20,7 @@ JsPDFMake.prototype.transformTOCToContent = function transformTOCToContent(secti
   const { options, items } = section;
   const content = [options.title];
   items.forEach(({ title, paragraphIndex }) => {
-    const tocItem = Object.assign({ text: title, isLink: true, linkParagraphIndex: paragraphIndex }, options);
-    delete tocItem.title;
+    const tocItem = Object.assign({ text: title, isLink: true, linkParagraphIndex: paragraphIndex }, options.itemOptions);
     content.push(tocItem);
   });
   return content;
