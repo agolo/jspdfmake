@@ -235,6 +235,11 @@ JsPDFMake.prototype.transformContentToDrawableParagraphs = function transformCon
   let currentPage = 1;
   return content.map((params, index) => {
     if (params.toc) {
+      if (currentPage > 1 && index < content.length - 1) {
+        // if it's not the first page and it's not the last page add another page after the toc for the next content
+        currentPage += 1;
+        yOffset = this.pageYMargin;
+      }
       return { isToc: true, id: params.toc.id };
     }
     const { nextXOffset, nextYOffset, nextPage, lines } = this.renderParagraph(params, xOffset, yOffset, currentPage, index);
