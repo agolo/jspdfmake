@@ -2,6 +2,7 @@
 import { JsPDFMake } from './index';
 
 JsPDFMake.prototype.initTOC = function initTOC() {
+  this.tocSections = {};
   this.docDefinition.content.filter(item => item.toc).forEach(({toc}) => {
     if (this.tocSections[toc.id]) {
       throw new Error(`Duplicate table of contents id '${toc.id}', please make sure all table of contents have a uniq id`);
