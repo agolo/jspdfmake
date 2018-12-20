@@ -106,7 +106,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
   if (hasBullet) {
     doc.setDrawColor(0);
     doc.setFillColor(0, 0, 0);
-    doc.circle(xOffset - fontSize, yOffset + (center / 1.5), fontSize / 7.0, 'FD');
+    doc.circle(xOffset - fontSize, yOffset + (center / 1.8), fontSize / 7.0, 'FD');
   }
   return true;
 };
@@ -291,3 +291,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
 JsPDFMake.prototype.download = function download() {
   this.doc.save(this.title);
 };
+
+export function extendJsPDFAPI(cb) {
+  cb(JsPDF.API);
+}
