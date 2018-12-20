@@ -23,9 +23,11 @@ export function JsPDFMake(title, docDefinition, options = {}) {
   this.title = title;
   this.pageWidth = this.doc.internal.pageSize.getWidth();
   this.pageHeight = this.doc.internal.pageSize.getHeight();
-  this.pageXMargin = options.pageXMargin || 0;
-  this.pageYMargin = options.pageYMargin || 0;
-  this.maxLineWidth = this.pageWidth - this.pageXMargin * 2;
+  this.pageMarginLeft = options.pageMarginLeft || 0;
+  this.pageMarginRight = options.pageMarginRight || 0;
+  this.pageMarginTop = options.pageMarginTop || 0;
+  this.pageMarginBottom = options.pageMarginBottom || 0;
+  this.maxLineWidth = this.pageWidth - this.pageMarginLeft - this.pageMarginRight;
   this.tocSections = {};
   this.generateFromDocDefinition();
 }
@@ -64,7 +66,7 @@ JsPDFMake.prototype.getCurrentPageNumber = function getCurrentPageNumber() {
 };
 
 JsPDFMake.prototype.isCursorOutOfPageVertically = function isCursorOutOfPageVertically(yOffset) {
-  return yOffset > this.pageHeight - this.pageYMargin;
+  return yOffset > this.pageHeight - this.pageMarginBottom;
 };
 
 /**
@@ -153,8 +155,9 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
     doc,
     maxLineWidth,
     tocSections,
-    pageXMargin,
-    pageYMargin,
+    pageMarginLeft,
+    pageMarginRight,
+    pageMarginTop,
     pageWidth,
   } = this;
 
@@ -165,7 +168,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   }
   if (pageBreak === 'before' || this.isCursorOutOfPageVertically(yOffset + fontSize)) {
     // if page break before or next line can't be written reset offset and add a new page
-    yOffset = pageYMargin;
+    yOffset = pageMarginTop;
     // this.addPage();
     pageNumber += 1;
   }
@@ -201,15 +204,15 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   textLines.forEach((line, index) => {
     if (this.isCursorOutOfPageVertically(yOffset + fontSize)) {
       // if next line can't be written reset offset and add a new page
-      yOffset = pageYMargin;
+      yOffset = pageMarginTop;
       // this.addPage();
       pageNumber += 1;
     }
-    xOffset = pageXMargin + marginLeft;
+    xOffset = pageMarginLeft + marginLeft;
     if (align === 'center') {
       xOffset = pageWidth / 2.0 - doc.getTextWidth(line) / 2.0 + marginLeft - marginRight;
     } else if (align === 'right') {
-      xOffset = pageWidth - doc.getTextWidth(line) - pageXMargin - marginRight;
+      xOffset = pageWidth - doc.getTextWidth(line) - pageMarginRight - marginRight;
     }
     lines.push({
       text: line,
@@ -236,7 +239,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   yOffset += marginBottom;
 
   if (pageBreak === 'after') {
-    yOffset = pageYMargin;
+    yOffset = pageMarginTop;
     // this.addPage();
     pageNumber += 1;
   }
@@ -246,7 +249,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
 };
 
 JsPDFMake.prototype.transformContentToDrawableParagraphs = function transformContentToDrawableParagraphs(content) {
-  let yOffset = this.pageYMargin;
+  let yOffset = this.pageMarginTop;
   let xOffset;
   let currentPage = 1;
   return content.map((params, index) => {
@@ -254,7 +257,7 @@ JsPDFMake.prototype.transformContentToDrawableParagraphs = function transformCon
       if (currentPage > 1 && index < content.length - 1) {
         // if it's not the first page and it's not the last page add another page after the toc for the next content
         currentPage += 1;
-        yOffset = this.pageYMargin;
+        yOffset = this.pageMarginTop;
       }
       return { isToc: true, id: params.toc.id };
     }

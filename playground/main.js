@@ -12,8 +12,10 @@ extendJsPDFAPI(API => addHelveticaLightFont(API));
 
 const example = generateFeedDocDefination(feed, clusters, true, outputConfig);
 const test = new JsPDFMake('My PDF', example, {
-  pageXMargin: 70,
-  pageYMargin: 40,
+  pageMarginLeft: 70,
+  pageMarginRight: 70,
+  pageMarginTop: 40,
+  pageMarginBottom: 80,
 });
 const { doc } = test;
 // test.generateFromDocDefinition();
