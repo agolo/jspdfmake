@@ -11,14 +11,15 @@ import './toc';
 
 export function JsPDFMake(title, docDefinition, options = {}) {
   this.docDefinition = docDefinition;
-  this.options = {
+  const jsPdfOptions = {
     orientation: 'p',
     unit: 'pt',
     format: 'a4',
     hotfixes: [], // an array of hotfix strings to enable
     lineHeight: DEFAULT_LINE_HEIGHT,
   };
-  this.doc = new JsPDF(this.options).setProperties({ title });
+  this.options = {...options};
+  this.doc = new JsPDF(jsPdfOptions).setProperties({ title });
   this.title = title;
   this.pageWidth = this.doc.internal.pageSize.getWidth();
   this.pageHeight = this.doc.internal.pageSize.getHeight();
