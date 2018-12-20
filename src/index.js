@@ -87,6 +87,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
   maxFontSize,
   isLink,
   linkPage,
+  hasBullet,
 }) {
   const {
     doc,
@@ -101,6 +102,11 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
     doc.textWithLink(text, xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, { pageNumber: linkPage });
   } else {
     doc.text(xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, text);
+  }
+  if (hasBullet) {
+    doc.setDrawColor(0);
+    doc.setFillColor(0, 0, 0);
+    doc.circle(xOffset - fontSize, yOffset + (center / 1.5), fontSize / 7.0, 'FD');
   }
   return true;
 };
@@ -139,6 +145,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   isLink = false,
   linkPage,
   linkParagraphIndex,
+  hasBullet = false,
 }, xOffset, yOffset, pageNumber, index) {
   const {
     doc,
@@ -172,6 +179,10 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
     });
   });
 
+  if (hasBullet) {
+    // give some space for the bullet point
+    marginLeft += fontSize;
+  }
   // splitTextToSize takes your string and turns it in to an array of strings,
   // each of which can be displayed within the specified maxLineWidth.
   const textLines = doc
@@ -185,7 +196,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   const lines = [];
 
   // doc.text can now add those lines easily; otherwise, it would have run text off the screen!
-  textLines.forEach((line) => {
+  textLines.forEach((line, index) => {
     if (this.isCursorOutOfPageVertically(yOffset + fontSize)) {
       // if next line can't be written reset offset and add a new page
       yOffset = pageYMargin;
@@ -211,6 +222,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       isLink,
       linkPage,
       linkParagraphIndex,
+      hasBullet: index === 0 && hasBullet, // only first line should contain the bullet point
     });
     yOffset = yOffset + fontSize;
     // TODO USE THIS IF CURSOR IS STILL IN THE SAME LINE
