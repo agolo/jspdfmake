@@ -90,6 +90,26 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
       marginBottom: 20,
     });
   }
+  const firstParagraphs = getArticleSnippetFromCluster(cluster, outputConfig.source_paragraphs);
+  if (firstParagraphs.length > 0) {
+    clusterContent.push(
+      {
+        text: 'Source Excerpt',// `First ${firstParagraphs.length} Paragraphs:`,
+        fontStyle: 'bold',
+        fontSize: 11,
+        align: 'left',
+        marginBottom: 10,
+        backgroundColor: [255, 0, 0],
+      },
+      {
+        text: firstParagraphs.join('\n\n'),
+        fontStyle: 'light',
+        fontSize: 10,
+        marginBottom: 20,
+      },
+    );
+  }
+
   if (outputConfig.summary_bullets > 0) {
     const sentences = getClusterSummaryPoints(cluster, outputConfig.summary_bullets);
     clusterContent.push(
@@ -110,32 +130,14 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
       hasBullet: true,
     })));
   }
-  const firstParagraphs = getArticleSnippetFromCluster(cluster, outputConfig.source_paragraphs);
-  if (firstParagraphs.length > 0) {
-    clusterContent.push(
-      {
-        text: `First ${firstParagraphs.length} Paragraphs:`,
-        fontStyle: 'bold',
-        fontSize: 18,
-        align: 'center',
-        marginTop: 40,
-        marginBottom: 40,
-      },
-      {
-        text: firstParagraphs.map((paragraph, i) => (`${i + 1}. ${paragraph}`)).join('\n\n'),
-        fontSize: 16,
-        marginBottom: 40,
-      },
-      { ...hr, marginBottom: 40 },
-    );
-  }
+  const numOfArticles = cluster.fetchedArticles.length; 
   clusterContent.push({
-    text: 'Sources: '.concat(generateSources(cluster.sources)),
-    fontStyle: 'bolditalic',
-    fontSize: 14,
+    text: `Sources (${numOfArticles} article${numOfArticles > 1 ? 's' : ''})`,
+    fontStyle: 'light',
+    fontSize: 11,
     textColor: '#333',
-    marginTop: 40,
-    align: 'center',
+    marginTop: 20,
+    align: 'left',
   });
   clusterContent.push(generateClusterArticles(cluster.fetchedArticles, outputConfig));
   const merged = [].concat.apply([], clusterContent);
