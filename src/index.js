@@ -88,6 +88,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
   isLink,
   linkPage,
   hasBullet,
+  bulletSpacing,
 }) {
   const {
     doc,
@@ -106,7 +107,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
   if (hasBullet) {
     doc.setDrawColor(0);
     doc.setFillColor(0, 0, 0);
-    doc.circle(xOffset - fontSize, yOffset + (center / 1.8), fontSize / 7.0, 'FD');
+    doc.circle(xOffset - bulletSpacing, yOffset + (center / 1.8), fontSize / 7.0, 'FD');
   }
   return true;
 };
@@ -146,6 +147,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   linkPage,
   linkParagraphIndex,
   hasBullet = false,
+  bulletSpacing = fontSize,
 }, xOffset, yOffset, pageNumber, index) {
   const {
     doc,
@@ -181,7 +183,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
 
   if (hasBullet) {
     // give some space for the bullet point
-    marginLeft += fontSize;
+    marginLeft += bulletSpacing;
   }
   // splitTextToSize takes your string and turns it in to an array of strings,
   // each of which can be displayed within the specified maxLineWidth.
@@ -223,6 +225,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       linkPage,
       linkParagraphIndex,
       hasBullet: index === 0 && hasBullet, // only first line should contain the bullet point
+      bulletSpacing,
     });
     yOffset = yOffset + fontSize;
     // TODO USE THIS IF CURSOR IS STILL IN THE SAME LINE

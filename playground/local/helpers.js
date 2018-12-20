@@ -4,61 +4,59 @@ import { getClusterSummaryPoints, getArticleSnippetFromCluster, getUniqSources }
 export const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
 export const randomColors = ['magenta', 'red', 'orange', 'lime', 'green', 'cyan', 'blue', 'purple'];
 export const hr = {
-  text: '______________________________________________________',
+  text: '--------------------------',
   align: 'center',
-  fontSize: 12,
+  fontSize: 8,
+  color: '#333333',
 };
 
 export const generateSources = (sources) => {
   return getUniqSources(sources)
-    .map((source, index) => (`[${index + 1}] ${source}`))
     .join(',');
 };
 
 export const generateClusterArticles = (articles, outputConfig) => {
-  const result = articles.map((article, index) => {
-    const articleContent = [{
-      text: `Article: ${index + 1} of ${articles.length}`,
-      fontStyle: 'bold',
-      fontSize: 14,
-      marginBottom: 40,
-      pageBreak: 'before',
-      textColor: '#333',
-    }];
+  const result = articles.map((article) => {
+    const articleContent = [];
     if (outputConfig.source_title) {
       articleContent.push({
         text: article.title,
-        fontStyle: 'bold',
-        fontSize: 20,
-        align: 'center',
+        fontStyle: 'light',
+        fontSize: 9,
+        align: 'left',
+        marginBottom: 3,
       });
     }
+    if (outputConfig.source_links && article.url) {
+      articleContent.push({
+        text: article.url,
+        fontStyle: 'light',
+        fontSize: 8,
+        textColor: '#4a86e8',
+        marginLeft: 40,
+        marginBottom: 3,
+      });
+    }
+    articleContent.push({
+      text: `${moment(article.published_at).format('MMMM DD, YYYY')} | ${generateSources(article.sources)}`,
+      fontStyle: 'light',
+      fontSize: 8,
+      align: 'left',
+      marginLeft: 40,
+      marginBottom: 3,
+    });
+
     if (outputConfig.source_text) {
       articleContent.push(
         {
           text: article.text,
-          fontSize: 16,
-          marginTop: 40,
+          fontSize: 8,
+          fontStyle: 'light',
+          marginLeft: 40,
+          marginTop: 10,
         },
-        { ...hr, marginTop: 40 },
+        { ...hr, marginTop: 20, marginBottom: 20 },
       );
-    }
-    articleContent.push({
-      text: `Sources: ${generateSources(article.sources)}`,
-      fontStyle: 'bolditalic',
-      fontSize: 14,
-      align: 'center',
-      textColor: '#333',
-      marginTop: 40,
-    });
-    if (outputConfig.source_links && article.url) {
-      articleContent.push({
-        text: `Url: ${article.url}`,
-        fontStyle: 'bold',
-        fontSize: 16,
-        textColor: '#2067b3',
-        marginTop: 40,
-      });
     }
     return articleContent;
   });
@@ -76,6 +74,7 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
       text: capitalize(cluster.title),
       fontStyle: 'normal',
       fontSize: 14,
+      marginTop: 2,
       marginBottom: 10,
       marginLeft: 100,
       marginRight: 100,
@@ -83,7 +82,7 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
       tocIds,
       tocItemText: capitalize(cluster.title).substring(0, 65).concat(cluster.title.length > 65 ? '...' : ''),
     }, {
-      text: `${moment(cluster.created_at).format('MMMM DD, YYYY')}`,
+      text: moment(cluster.created_at).format('MMMM DD, YYYY'),
       fontSize: 11,
       fontStyle: 'light',
       align: 'center',
@@ -126,8 +125,9 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
       fontStyle: 'light',
       fontSize: 10,
       marginLeft: 25,
-      marginBottom: 7,
+      marginBottom: 5,
       hasBullet: true,
+      bulletSpacing: 15,
     })));
   }
   const numOfArticles = cluster.fetchedArticles.length; 
@@ -137,6 +137,7 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
     fontSize: 11,
     textColor: '#333',
     marginTop: 20,
+    marginBottom: 10,
     align: 'left',
   });
   clusterContent.push(generateClusterArticles(cluster.fetchedArticles, outputConfig));

@@ -19,13 +19,13 @@ export const generateFeedDocDefination = (feed, clusters, isFull, outputConfig) 
   const docDefinition = {
     content: [
       {
-        text: `Project: ${feed.name}\n\n`,
+        text: `Project: ${feed.name}\n`,
         fontSize: 16,
         fontStyle: 'normal',
         textColor: 'black',
         align: 'center',
-        marginTop: 130,
-        marginBottom: 10,
+        marginTop: 105,
+        marginBottom: 5,
       },
       {
         text: `${moment(feed.startDate).format('MMMM DD, YYYY')} - ${moment(feed.endDate).format('MMMM DD, YYYY')}`,
@@ -33,6 +33,7 @@ export const generateFeedDocDefination = (feed, clusters, isFull, outputConfig) 
         fontStyle: 'light',
         textColor: '#999999',
         align: 'center',
+        marginBottom: 3,
       },
       !isFull ? null : {
         text: `${feed.feedClusterCount} Summaries\n${feed.feedArticleCount} Articles`,
@@ -48,11 +49,12 @@ export const generateFeedDocDefination = (feed, clusters, isFull, outputConfig) 
             text: 'Table of Contents',
             align: 'left',
             fontSize: 14,
+            marginTop: 42,
             marginBottom: 20,
           },
           itemOptions: {
             fontSize: 9,
-            fontStyle: 'light',
+            fontStyle: 'normal',
             marginBottom: 12,
           },
         },
