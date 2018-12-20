@@ -90,6 +90,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
   maxFontSize,
   isLink,
   linkPage,
+  linkUrl,
   hasBullet,
   bulletSpacing,
   highlightColor,
@@ -109,7 +110,11 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
     .setFontSize(fontSize)
     .setTextColor(textColor);
   if (isLink) {
-    doc.textWithLink(text, xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, { pageNumber: linkPage });
+    let link = { pageNumber: linkPage };
+    if (linkUrl) {
+      link = { url: linkUrl };
+    } 
+    doc.textWithLink(text, xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, link);
   } else {
     doc.text(xOffset, center + Math.max(fontSize, maxFontSize) - fontSize + yOffset, text);
   }
@@ -154,6 +159,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   tocItemText,
   isLink = false,
   linkPage,
+  linkUrl,
   linkParagraphIndex,
   hasBullet = false,
   bulletSpacing = fontSize,
@@ -235,6 +241,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       maxFontSize: fontSize,
       isLink,
       linkPage,
+      linkUrl,
       linkParagraphIndex,
       hasBullet: index === 0 && hasBullet, // only first line should contain the bullet point
       bulletSpacing,

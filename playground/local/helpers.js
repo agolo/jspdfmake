@@ -30,6 +30,8 @@ export const generateClusterArticles = (articles, outputConfig) => {
     if (outputConfig.source_links && article.url) {
       articleContent.push({
         text: article.url,
+        isLink: true,
+        linkUrl: article.url,
         fontStyle: 'light',
         fontSize: 8,
         textColor: '#4a86e8',
