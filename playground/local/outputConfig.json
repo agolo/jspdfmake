@@ -1,9 +1,9 @@
 {
-  "contents": false,
-  "summary_title": false,
+  "contents": true,
+  "summary_title": true,
   "summary_bullets": 5,
-  "source_paragraphs": 1,
-  "source_text": false,
-  "source_title": false,
+  "source_paragraphs": 5,
+  "source_text": true,
+  "source_title": true,
   "source_links": true
 }

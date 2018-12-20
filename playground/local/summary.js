@@ -10,8 +10,11 @@ export function getClusterSummaryPoints(cluster, limit) {
   const sentences = summaryWithSentences
     .map(section => section.sentences)
     .slice(0, limit);
-
-  return sentences;
+  const allSentences = [];
+  sentences.forEach(sentence => {
+    sentence.forEach(s => allSentences.push(s));
+  });
+  return allSentences;
 }
 
 export function getArticleSnippetFromCluster(cluster, numberOfParagraphs) {

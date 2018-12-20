@@ -5,12 +5,15 @@ import { generateFeedDocDefination } from './local';
 import feed from './local/feed.json';
 import clusters from './local/clusters.json';
 import outputConfig from './local/outputConfig.json';
-import { JsPDFMake } from '../src';
+import { JsPDFMake, extendJsPDFAPI } from '../src';
+import addHelveticaLightFont from './local/Helvetica-Light-normal';
 
-const example = generateFeedDocDefination(feed, clusters, false, outputConfig);
+extendJsPDFAPI(API => addHelveticaLightFont(API));
+
+const example = generateFeedDocDefination(feed, clusters, true, outputConfig);
 const test = new JsPDFMake('My PDF', example, {
-  pageXMargin: 40,
-  pageYMargin: 40,
+  pageXMargin: 80,
+  pageYMargin: 80,
 });
 const { doc } = test;
 // test.generateFromDocDefinition();

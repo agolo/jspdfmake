@@ -67,45 +67,48 @@ export const generateClusterArticles = (articles, outputConfig) => {
 };
 
 export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
-  const clusterContent = [{
+  let clusterContent = [{
     text: '',
     pageBreak: 'before',
   }];
   if (outputConfig.summary_title) {
     clusterContent.push({
       text: capitalize(cluster.title),
-      fontStyle: 'bold',
-      fontSize: 20,
-      marginBottom: 40,
+      fontStyle: 'normal',
+      fontSize: 14,
+      marginBottom: 10,
+      marginLeft: 100,
+      marginRight: 100,
       align: 'center',
       tocIds,
       tocItemText: capitalize(cluster.title).substring(0, 65).concat(cluster.title.length > 65 ? '...' : ''),
     }, {
       text: `${moment(cluster.created_at).format('MMMM DD, YYYY')}`,
-      fontSize: 12,
+      fontSize: 11,
+      fontStyle: 'light',
       align: 'center',
-      marginBottom: 40,
+      marginBottom: 20,
     });
   }
   if (outputConfig.summary_bullets > 0) {
     const sentences = getClusterSummaryPoints(cluster, outputConfig.summary_bullets);
     clusterContent.push(
-      { ...hr },
       {
         text: 'Summary',
         fontStyle: 'bold',
-        fontSize: 18,
-        align: 'center',
-        marginTop: 40,
-        marginBottom: 40,
+        fontSize: 11,
+        align: 'left',
+        marginBottom: 10,
       },
-      {
-        text: sentences.map(sentence => (`- ${sentence}`)).join('\n\n'),
-        fontSize: 16,
-        marginBottom: 40,
-      },
-      { ...hr, marginBottom: 40 },
     );
+    clusterContent = clusterContent.concat(sentences.map(sentence => ({
+      text: sentence,
+      fontStyle: 'light',
+      fontSize: 10,
+      marginLeft: 25,
+      marginBottom: 7,
+      hasBullet: true,
+    })));
   }
   const firstParagraphs = getArticleSnippetFromCluster(cluster, outputConfig.source_paragraphs);
   if (firstParagraphs.length > 0) {
