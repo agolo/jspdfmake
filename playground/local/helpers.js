@@ -16,7 +16,7 @@ export const generateSources = (sources) => {
 };
 
 export const generateClusterArticles = (articles, outputConfig) => {
-  return articles.map((article, index) => {
+  const result = articles.map((article, index) => {
     const articleContent = [{
       text: `Article: ${index + 1} of ${articles.length}`,
       fontStyle: 'bold',
@@ -61,7 +61,9 @@ export const generateClusterArticles = (articles, outputConfig) => {
       });
     }
     return articleContent;
-  }).flatten();
+  });
+  const merged = [].concat.apply([], result);
+  return merged;
 };
 
 export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
@@ -133,5 +135,6 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
     align: 'center',
   });
   clusterContent.push(generateClusterArticles(cluster.fetchedArticles, outputConfig));
-  return clusterContent.flatten();
+  const merged = [].concat.apply([], clusterContent);
+  return merged;
 };

@@ -1,13 +1,13 @@
 import formatJson from 'format-json';
 // import example from './examples/example_toc';
 // import fontInBase64 from './fonts/font';
-import docGenerator from './local';
+import { generateFeedDocDefination } from './local';
 import feed from './local/feed.json';
 import clusters from './local/clusters.json';
 import outputConfig from './local/outputConfig.json';
 import { JsPDFMake } from '../src';
 
-const example = docGenerator.generateFeedDocDefination(feed, clusters, false, outputConfig);
+const example = generateFeedDocDefination(feed, clusters, false, outputConfig);
 const test = new JsPDFMake('My PDF', example, {
   pageXMargin: 40,
   pageYMargin: 40,

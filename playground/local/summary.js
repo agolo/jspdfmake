@@ -1,7 +1,5 @@
-import { compact, uniq, chain } from 'underscore';
-
 export function getUniqSources(sources) {
-  return compact(uniq(sources, false, s => s.publisher)).map(source => source.name || source.publisher);
+  return sources.filter(s => s.name).map(source => source.name || source.publisher);
 }
 
 export function getClusterSummaryPoints(cluster, limit) {
@@ -9,11 +7,9 @@ export function getClusterSummaryPoints(cluster, limit) {
     return (summaryItem.sentences && summaryItem.sentences.length > 0);
   });
 
-  const sentences = chain(summaryWithSentences)
+  const sentences = summaryWithSentences
     .map(section => section.sentences)
-    .flatten()
-    .slice(0, limit)
-    .value();
+    .slice(0, limit);
 
   return sentences;
 }
