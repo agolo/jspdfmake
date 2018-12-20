@@ -60,6 +60,9 @@ export const generateFeedDocDefination = (feed, clusters, isFull, outputConfig) 
         },
       } : null,
     ].filter(Boolean).concat(clustersContent),
+    renderFooter: function(doc, pageNumber, tocSections) {
+      console.log(pageNumber, tocSections);
+    }
   };
   return docDefinition;
 };

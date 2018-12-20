@@ -133,9 +133,8 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
   const numOfArticles = cluster.fetchedArticles.length; 
   clusterContent.push({
     text: `Sources (${numOfArticles} article${numOfArticles > 1 ? 's' : ''})`,
-    fontStyle: 'light',
+    fontStyle: 'bold',
     fontSize: 11,
-    textColor: '#333',
     marginTop: 20,
     marginBottom: 10,
     align: 'left',

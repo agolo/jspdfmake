@@ -292,6 +292,20 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   });
 
   this.drawParagraphs(this.updateTOCLinks(paragraphs));
+  this.renderFooterToPages();
+};
+
+JsPDFMake.prototype.renderFooterToPages = function renderFooterToPages() {
+  const { docDefinition, doc, tocSections } = this;
+  const { renderFooter }= docDefinition;
+  if (renderFooter) {
+    let currentPageNumber = 1;
+    while (currentPageNumber <= this.size()) {
+      doc.setPage(currentPageNumber);
+      renderFooter(doc, currentPageNumber, tocSections);
+      currentPageNumber += 1;
+    }  
+  }
 };
 
 JsPDFMake.prototype.download = function download() {

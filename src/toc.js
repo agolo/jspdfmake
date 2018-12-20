@@ -35,9 +35,13 @@ JsPDFMake.prototype.updateTOCLinks =  function updateTOCLinks(paragraphs) {
     let paragraphSize = 0;
     if (p.isToc) {
       // If the current paragraph is a table of contents update it's page number to be after last page
-      p.lines.forEach(line => {
+      p.lines.forEach((line, index) => {
         paragraphSize = line.pageNumber;
         line.pageNumber += lastPage;
+        if (index === 0) {
+          // assign the page number of the toc section to it's first line page number
+          this.tocSections[p.id].pageNumber = line.pageNumber;
+        }
       });
       // Increase the size of the table of contents paragraph by this toc size
       tocParagraphsSize += paragraphSize;
