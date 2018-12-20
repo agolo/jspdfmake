@@ -83,6 +83,7 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
   fontName,
   fontStyle,
   textColor,
+  lineWidth,
   xOffset,
   yOffset,
   pageNumber,
@@ -91,11 +92,17 @@ JsPDFMake.prototype.drawTextInLine = function drawTextInLine({
   linkPage,
   hasBullet,
   bulletSpacing,
+  highlightColor,
 }) {
   const {
     doc,
   } = this;
   const center = fontSize / 2.0 + fontSize / 4.0; // The renderer starts drawing text at the center
+  if (highlightColor) {
+    doc.setDrawColor(0);
+    doc.setFillColor(highlightColor[0], highlightColor[1], highlightColor[2]);
+    doc.rect(xOffset, yOffset, lineWidth, fontSize, 'F');
+  }
   doc
     .setPage(pageNumber)
     .setFont(fontName, fontStyle)
@@ -150,6 +157,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   linkParagraphIndex,
   hasBullet = false,
   bulletSpacing = fontSize,
+  highlightColor = false,
 }, xOffset, yOffset, pageNumber, index) {
   const {
     doc,
@@ -220,6 +228,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       fontName,
       fontStyle,
       textColor,
+      lineWidth: pageWidth - pageMarginRight - marginRight - pageMarginLeft - marginLeft,
       xOffset,
       yOffset,
       pageNumber,
@@ -229,6 +238,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
       linkParagraphIndex,
       hasBullet: index === 0 && hasBullet, // only first line should contain the bullet point
       bulletSpacing,
+      highlightColor,
     });
     yOffset = yOffset + fontSize;
     // TODO USE THIS IF CURSOR IS STILL IN THE SAME LINE

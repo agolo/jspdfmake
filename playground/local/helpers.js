@@ -98,7 +98,7 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
         fontSize: 11,
         align: 'left',
         marginBottom: 10,
-        backgroundColor: [255, 0, 0],
+        highlightColor: [219, 229, 242],
       },
       {
         text: firstParagraphs.join('\n\n'),
@@ -118,6 +118,7 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
         fontSize: 11,
         align: 'left',
         marginBottom: 10,
+        highlightColor: [219, 229, 242],
       },
     );
     clusterContent = clusterContent.concat(sentences.map(sentence => ({
@@ -138,6 +139,7 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
     marginTop: 20,
     marginBottom: 10,
     align: 'left',
+    highlightColor: [219, 229, 242],
   });
   clusterContent.push(generateClusterArticles(cluster.fetchedArticles, outputConfig));
   const merged = [].concat.apply([], clusterContent);
