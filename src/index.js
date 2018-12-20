@@ -164,7 +164,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   hasBullet = false,
   bulletSpacing = fontSize,
   highlightColor = false,
-}, xOffset, yOffset, pageNumber, index) {
+}, xOffset, yOffset, pageNumber, paragraphIndex, maxLinesPerParagraph = false) {
   const {
     doc,
     maxLineWidth,
@@ -194,7 +194,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
     }
     tocSections[tocId].items.push({
       title: tocItemText || text,
-      paragraphIndex: index,
+      paragraphIndex,
     });
   });
 
@@ -204,11 +204,15 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
   }
   // splitTextToSize takes your string and turns it in to an array of strings,
   // each of which can be displayed within the specified maxLineWidth.
-  const textLines = doc
+  let textLines = doc
     .setFont(fontName, fontStyle)
     .setFontSize(fontSize)
     .setTextColor(textColor)
     .splitTextToSize(this.escapeSpecialCharacters(text), maxLineWidth - marginLeft - marginRight);
+
+  if (maxLinesPerParagraph) {
+    textLines = textLines.splice(0, maxLinesPerParagraph);
+  } 
 
   yOffset += marginTop;
 
@@ -265,7 +269,7 @@ JsPDFMake.prototype.renderParagraph = function renderParagraph({
 
 };
 
-JsPDFMake.prototype.transformContentToDrawableParagraphs = function transformContentToDrawableParagraphs(content) {
+JsPDFMake.prototype.transformContentToDrawableParagraphs = function transformContentToDrawableParagraphs(content, maxLinesPerParagraph) {
   let yOffset = this.pageMarginTop;
   let xOffset;
   let currentPage = 1;
@@ -278,7 +282,7 @@ JsPDFMake.prototype.transformContentToDrawableParagraphs = function transformCon
       }
       return { isToc: true, id: params.toc.id };
     }
-    const { nextXOffset, nextYOffset, nextPage, lines } = this.renderParagraph(params, xOffset, yOffset, currentPage, index);
+    const { nextXOffset, nextYOffset, nextPage, lines } = this.renderParagraph(params, xOffset, yOffset, currentPage, index, maxLinesPerParagraph);
     yOffset = nextYOffset;
     xOffset = nextXOffset;
     currentPage = nextPage;
@@ -298,7 +302,7 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   } = this;
   Object.entries(tocSections).forEach(([tocId, tocSection]) => {
     const content = this.transformTOCToContent(tocSection);
-    const tocParagraphs = this.transformContentToDrawableParagraphs(content);
+    const tocParagraphs = this.transformContentToDrawableParagraphs(content, 1); // transform to drawable paragraph with max 1 line per paragraph
 
     // Merge tocParagraphs into the current paragraphs
     paragraphs.forEach((p) => {

@@ -82,7 +82,7 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
       marginRight: 60,
       align: 'center',
       tocIds,
-      tocItemText: capitalize(cluster.title).substring(0, 65).concat(cluster.title.length > 65 ? '...' : ''),
+      tocItemText: capitalize(cluster.title),
     }, {
       text: moment(cluster.created_at).format('MMMM DD, YYYY'),
       fontSize: 11,
