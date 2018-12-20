@@ -296,13 +296,13 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
 };
 
 JsPDFMake.prototype.renderFooterToPages = function renderFooterToPages() {
-  const { docDefinition, doc, tocSections } = this;
+  const { docDefinition, doc, tocSections, pageWidth, pageHeight } = this;
   const { renderFooter }= docDefinition;
   if (renderFooter) {
     let currentPageNumber = 1;
     while (currentPageNumber <= this.size()) {
       doc.setPage(currentPageNumber);
-      renderFooter(doc, currentPageNumber, tocSections);
+      renderFooter(doc, currentPageNumber, { width: pageWidth, height: pageHeight }, tocSections);
       currentPageNumber += 1;
     }  
   }

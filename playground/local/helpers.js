@@ -7,7 +7,7 @@ export const hr = {
   text: '--------------------------',
   align: 'center',
   fontSize: 8,
-  color: '#333333',
+  textColor: '#555555',
 };
 
 export const generateSources = (sources) => {
@@ -55,7 +55,7 @@ export const generateClusterArticles = (articles, outputConfig) => {
           marginLeft: 40,
           marginTop: 10,
         },
-        { ...hr, marginTop: 20, marginBottom: 20 },
+        { ...hr, marginTop: 5, marginBottom: 15 },
       );
     }
     return articleContent;
@@ -76,8 +76,8 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
       fontSize: 14,
       marginTop: 2,
       marginBottom: 10,
-      marginLeft: 100,
-      marginRight: 100,
+      marginLeft: 60,
+      marginRight: 60,
       align: 'center',
       tocIds,
       tocItemText: capitalize(cluster.title).substring(0, 65).concat(cluster.title.length > 65 ? '...' : ''),
