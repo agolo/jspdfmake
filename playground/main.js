@@ -1,5 +1,5 @@
 import formatJson from 'format-json';
-// import example from './examples/example_toc';
+import example from './examples/example_toc1';
 // import fontInBase64 from './fonts/font';
 import { generateFeedDocDefination } from './local';
 import feed from './local/feed.json';
@@ -10,7 +10,7 @@ import addHelveticaLightFont from './local/Helvetica-Light-normal';
 
 extendJsPDFAPI(API => addHelveticaLightFont(API));
 
-const example = generateFeedDocDefination(feed, clusters, true, outputConfig);
+// const example = generateFeedDocDefination(feed, clusters, true, outputConfig);
 const test = new JsPDFMake('My PDF', example, {
   pageMarginLeft: 70,
   pageMarginRight: 70,

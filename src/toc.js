@@ -1,4 +1,5 @@
 import { JsPDFMake } from './index';
+import { connectWithDotsToFitLine } from './utils';
 
 JsPDFMake.prototype.initTOC = function initTOC() {
   this.tocSections = {};
@@ -67,11 +68,25 @@ JsPDFMake.prototype.updateTOCLinks = function updateTOCLinks(paragraphs) {
 
   // Link all linked lines to the correct paragraph's first line
   paragraphs.forEach(p => {
-    p.lines.forEach(line => {
+    p.lines = p.lines.reduce((nLines, line) => {
       if (line.linkParagraphIndex >= 0) {
-        line.linkPage = paragraphs[line.linkParagraphIndex].lines[0].pageNumber;
+        // 2 lines connnected with dots the first line is the link, the second is the page number
+        const dotConnectLines = connectWithDotsToFitLine(
+          {
+            ...line,
+            linkPage: paragraphs[line.linkParagraphIndex].lines[0].pageNumber
+          },
+          text => {
+            return this.doc
+              .setFont(line.fontName, line.fontStyle)
+              .setFontSize(line.fontSize)
+              .getTextWidth(text);
+          } // send the get text width function according to the current line's font specs
+        );
+        return nLines.concat(dotConnectLines);
       }
-    });
+      return nLines.concat(line);
+    }, []);
   });
 
   return paragraphs;

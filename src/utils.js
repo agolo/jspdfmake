@@ -12,24 +12,91 @@ export const maxBy = (
   return undefined;
 };
 
+String.prototype.reverse = function() {
+  return this.split('')
+    .reverse()
+    .join('');
+};
+
+const EPS = 1e-5;
+
+const lessThanOrEqual = (a, b) => {
+  return a < b || Math.abs(a - b) < EPS;
+};
+
+const removeCharactersToFitWidth = (text, width, numOfDots, getTextWidth) => {
+  const paddingText = Array(numOfDots)
+    .fill('.')
+    .join('')
+    .concat('  ');
+  const totalWidth = width + getTextWidth(paddingText);
+  let nText = '';
+  let i = 0;
+  while (
+    i < text.length &&
+    lessThanOrEqual(
+      getTextWidth(nText.concat(text[i], paddingText)),
+      totalWidth
+    )
+  ) {
+    nText = nText.concat(text[i]);
+    i += 1;
+  }
+  nText = nText.concat(paddingText);
+  return nText;
+};
+
+const addDotsToFitWidth = (text, width, getTextWidth) => {
+  let nText = text;
+  while (lessThanOrEqual(getTextWidth(nText.concat('.  ')), width)) {
+    nText = nText.concat('.');
+  }
+  console.log(text);
+  console.log(nText);
+  return nText.concat('  ');
+};
+
 /**
- * Returns a line of text connecting leftText and rightText by dots in between without exceeding the max width
- * @param {String} leftText
- * @param {String} rightText
- * @param {Number} maxWidth max width in pixels
+ * Returns 2 lines connnected with dots, the first line is the link and the second is the page number
+ * @param {Object} line the line to add dots to
  * @param {Number} minDots minimum number of dots between the two texts
  * @param {String} seperator text to seprate between the two texts
  * @param {Function} getTextWidth a function that returns the width of a given text in pixels
  */
-export const connectWithDotsToFitLine = (
-  leftText,
-  rightText,
-  maxWidth,
-  minDots,
-  seperator,
-  getTextWidth
-) => {
-  console.log(leftText, rightText, maxWidth, minDots, seperator, getTextWidth);
+export const connectWithDotsToFitLine = (line, getTextWidth) => {
+  const minRightText = Array(9)
+    .fill('.')
+    .join('')
+    .concat(line.linkPage);
+  const rightTextWidth = getTextWidth(minRightText);
+  const leftTextWidth = getTextWidth(line.text);
+  let leftText = line.text;
+  let rightText = minRightText;
+  if (line.lineWidth - leftTextWidth < rightTextWidth) {
+    // this means we need to remove some characters from the line text to make space for the dots and the pageNumber
+    leftText = removeCharactersToFitWidth(
+      line.text,
+      line.lineWidth - rightTextWidth,
+      0,
+      getTextWidth
+    );
+  } else {
+    rightText = addDotsToFitWidth(
+      minRightText.reverse(),
+      line.lineWidth - leftTextWidth,
+      getTextWidth
+    ).reverse();
+  }
+  console.log(rightTextWidth);
+  console.log(getTextWidth(rightText));
+  return [
+    { ...line, text: leftText },
+    {
+      ...line,
+      text: rightText,
+      xOffset: line.xOffset + line.lineWidth - getTextWidth(rightText)
+    }
+  ];
 };
 
 export default {

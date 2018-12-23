@@ -18,7 +18,7 @@ const example = {
 };
 
 example.content = example.content.concat(
-  Array(100)
+  Array(13000)
     .fill()
     .map((a, i) => ({
       text: `Paragraph ${i +
