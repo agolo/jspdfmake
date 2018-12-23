@@ -55,7 +55,7 @@ export const generateClusterArticles = (articles, outputConfig) => {
           fontSize: 8,
           fontStyle: 'light',
           marginLeft: 40,
-          marginTop: 10,
+          marginTop: 5,
         },
         { ...hr, marginTop: 5, marginBottom: 15 },
       );
@@ -99,7 +99,7 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
         fontStyle: 'bold',
         fontSize: 11,
         align: 'left',
-        marginBottom: 10,
+        marginBottom: 3,
         highlightColor: [219, 229, 242],
       },
       {
@@ -119,7 +119,7 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
         fontStyle: 'bold',
         fontSize: 11,
         align: 'left',
-        marginBottom: 10,
+        marginBottom: 3,
         highlightColor: [219, 229, 242],
       },
     );
@@ -133,13 +133,13 @@ export const generateClusterContent = (cluster, outputConfig, tocIds = []) => {
       bulletSpacing: 15,
     })));
   }
-  const numOfArticles = cluster.fetchedArticles.length; 
+  const numOfArticles = cluster.fetchedArticles.length;
   clusterContent.push({
     text: `Sources (${numOfArticles} article${numOfArticles > 1 ? 's' : ''})`,
     fontStyle: 'bold',
     fontSize: 11,
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 3,
     align: 'left',
     highlightColor: [219, 229, 242],
   });
