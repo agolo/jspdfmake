@@ -51,8 +51,6 @@ const addDotsToFitWidth = (text, width, getTextWidth) => {
   while (lessThanOrEqual(getTextWidth(nText.concat('.  ')), width)) {
     nText = nText.concat('.');
   }
-  console.log(text);
-  console.log(nText);
   return nText.concat('  ');
 };
 
@@ -87,8 +85,6 @@ export const connectWithDotsToFitLine = (line, getTextWidth) => {
       getTextWidth
     ).reverse();
   }
-  console.log(rightTextWidth);
-  console.log(getTextWidth(rightText));
   return [
     { ...line, text: leftText },
     {
