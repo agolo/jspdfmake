@@ -8,7 +8,14 @@ const logoDiameter = 40;
 function renderFooter(doc, pageNumber, { width, height }) {
   const logoXOffset = width - logoDiameter - 50;
   const logoYOffset = height - logoDiameter - 20;
-  doc.addImage(logoBase64, 'JPEG', logoXOffset, logoYOffset, logoDiameter, logoDiameter - 3);
+  doc.addImage(
+    logoBase64,
+    'JPEG',
+    logoXOffset,
+    logoYOffset,
+    logoDiameter,
+    logoDiameter - 3
+  );
   doc.setFont('helvetica', 'normal');
   if (pageNumber > 1) {
     const text = `${pageNumber}`;
@@ -29,10 +36,15 @@ function renderFooter(doc, pageNumber, { width, height }) {
       .setFontStyle('light')
       .setTextColor('#7f7f7f')
       .textWithLink(text, xOffset, yOffset, { pageNumber: 2 });
-    
+
     doc.setLineWidth(1);
     doc.setDrawColor(127, 127, 127);
-    doc.line(xOffset + doc.getTextWidth('Back to '), yOffset + 0.7, xOffset + doc.getTextWidth(text), yOffset + 0.7);
+    doc.line(
+      xOffset + doc.getTextWidth('Back to '),
+      yOffset + 0.7,
+      xOffset + doc.getTextWidth(text),
+      yOffset + 0.7
+    );
   }
 }
 
@@ -45,10 +57,19 @@ function renderFooter(doc, pageNumber, { width, height }) {
  * @param {Object} outputConfig The output configuration based on which the clusters will be rendered
  * @returns {Object} The document defination for this feed
  */
-export const generateFeedDocDefination = (feed, clusters, isFull, outputConfig) => {
+export const generateFeedDocDefination = (
+  feed,
+  clusters,
+  isFull,
+  outputConfig
+) => {
   const linkTOC = outputConfig.contents && clusters.length > 1;
   const tocIds = linkTOC ? ['mainToc'] : [];
-  const clustersContent = clusters.reduce((prev, cluster) => prev.concat(generateClusterContent(cluster, outputConfig, tocIds)), []);
+  const clustersContent = clusters.reduce(
+    (prev, cluster) =>
+      prev.concat(generateClusterContent(cluster, outputConfig, tocIds)),
+    []
+  );
   const docDefinition = {
     content: [
       {
@@ -58,50 +79,60 @@ export const generateFeedDocDefination = (feed, clusters, isFull, outputConfig) 
         textColor: 'black',
         align: 'center',
         marginTop: 105,
-        marginBottom: 5,
+        marginBottom: 5
       },
       {
-        text: `${moment(feed.startDate).format('MMMM DD, YYYY')} - ${moment(feed.endDate).format('MMMM DD, YYYY')}`,
+        text: `${moment(feed.startDate).format('MMMM DD, YYYY')} - ${moment(
+          feed.endDate
+        ).format('MMMM DD, YYYY')}`,
         fontSize: 12,
         fontStyle: 'light',
         textColor: '#999999',
         align: 'center',
-        marginBottom: 2,
+        marginBottom: 2
       },
-      !isFull ? null : {
-        text: `${feed.feedClusterCount} Summaries`,
-        fontSize: 12,
-        fontStyle: 'light',
-        textColor: '#999999',
-        marginBottom: 2,
-        align: 'center',
-      },
-      !isFull ? null : {
-        text: `${feed.feedArticleCount} Articles`,
-        fontSize: 12,
-        fontStyle: 'light',
-        textColor: '#999999',
-        align: 'center',
-      },
-      linkTOC ? {
-        toc: {
-          id: 'mainToc',
-          title: {
-            text: 'Table of Contents',
-            align: 'left',
-            fontSize: 14,
-            marginTop: 42,
-            marginBottom: 20,
-          },
-          itemOptions: {
-            fontSize: 9,
-            fontStyle: 'normal',
-            marginBottom: 12,
-          },
+      !isFull
+        ? null
+        : {
+          text: `${feed.feedClusterCount} Summaries`,
+          fontSize: 12,
+          fontStyle: 'light',
+          textColor: '#999999',
+          marginBottom: 2,
+          align: 'center'
         },
-      } : null,
-    ].filter(Boolean).concat(clustersContent),
-    renderFooter, 
+      !isFull
+        ? null
+        : {
+          text: `${feed.feedArticleCount} Articles`,
+          fontSize: 12,
+          fontStyle: 'light',
+          textColor: '#999999',
+          align: 'center'
+        },
+      linkTOC
+        ? {
+          toc: {
+            id: 'mainToc',
+            title: {
+              text: 'Table of Contents',
+              align: 'left',
+              fontSize: 14,
+              marginTop: 42,
+              marginBottom: 20
+            },
+            itemOptions: {
+              fontSize: 9,
+              fontStyle: 'normal',
+              marginBottom: 12
+            }
+          }
+        }
+        : null
+    ]
+      .filter(Boolean)
+      .concat(clustersContent),
+    renderFooter
   };
   return docDefinition;
 };

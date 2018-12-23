@@ -15,7 +15,7 @@ const test = new JsPDFMake('My PDF', example, {
   pageMarginLeft: 70,
   pageMarginRight: 70,
   pageMarginTop: 40,
-  pageMarginBottom: 80,
+  pageMarginBottom: 80
 });
 const { doc } = test;
 // test.generateFromDocDefinition();
@@ -51,7 +51,6 @@ editor.getSession().on('change', () => {
     console.error(error);
   }
 });
-
 
 // For debugging
 document.doc = doc;

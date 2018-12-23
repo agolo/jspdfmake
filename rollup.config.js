@@ -20,7 +20,7 @@ export default {
     resolve({
       jsnext: true,
       main: true,
-      browser: true,
+      browser: true
     }),
     commonjs({
       include: 'node_modules/**',
@@ -29,28 +29,24 @@ export default {
         // relative to the current directory, or the name
         // of a module in node_modules
         'node_modules/jspdfmake': ['JsPDFMake']
-      },
+      }
     }),
     json(),
     eslint({
-      exclude: [
-        'node_modules/**',
-        'playground/**',
-      ],
+      exclude: ['node_modules/**', 'playground/**']
     }),
     babel({
-      exclude: 'node_modules/**',
+      exclude: 'node_modules/**'
     }),
     replace({
       exclude: 'node_modules/**',
-      ENV: JSON.stringify(NODE_ENV),
+      ENV: JSON.stringify(NODE_ENV)
     }),
-    (isProd && uglify()),
+    isProd && uglify()
     // indicate which modules should be treated as external
   ],
-  external: (isProd && ['jspdf']),
-  globals: (isProd && {
+  external: isProd && ['jspdf'],
+  globals: isProd && {
     jspdf: 'jsPDF'
-  }),
+  }
 };
-

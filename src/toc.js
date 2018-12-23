@@ -1,37 +1,47 @@
-
 import { JsPDFMake } from './index';
 
 JsPDFMake.prototype.initTOC = function initTOC() {
   this.tocSections = {};
-  this.docDefinition.content.filter(item => item.toc).forEach(({toc}) => {
-    if (this.tocSections[toc.id]) {
-      throw new Error(`Duplicate table of contents id '${toc.id}', please make sure all table of contents have a uniq id`);
-    }
-    const options = Object.assign({}, toc); // deep clone toc
-    delete options.id;
-    this.tocSections[toc.id] = {
-      items: [],
-      options,
-    };
-  });
+  this.docDefinition.content
+    .filter(item => item.toc)
+    .forEach(({ toc }) => {
+      if (this.tocSections[toc.id]) {
+        throw new Error(
+          `Duplicate table of contents id '${
+            toc.id
+          }', please make sure all table of contents have a uniq id`
+        );
+      }
+      const options = Object.assign({}, toc); // deep clone toc
+      delete options.id;
+      this.tocSections[toc.id] = {
+        items: [],
+        options
+      };
+    });
 };
 
-JsPDFMake.prototype.transformTOCToContent = function transformTOCToContent(section) {
+JsPDFMake.prototype.transformTOCToContent = function transformTOCToContent(
+  section
+) {
   const { options, items } = section;
   const content = [options.title];
   items.forEach(({ title, paragraphIndex }) => {
-    const tocItem = Object.assign({ text: title, isLink: true, linkParagraphIndex: paragraphIndex }, options.itemOptions);
+    const tocItem = Object.assign(
+      { text: title, isLink: true, linkParagraphIndex: paragraphIndex },
+      options.itemOptions
+    );
     content.push(tocItem);
   });
   return content;
 };
 
-JsPDFMake.prototype.updateTOCLinks =  function updateTOCLinks(paragraphs) {
+JsPDFMake.prototype.updateTOCLinks = function updateTOCLinks(paragraphs) {
   let tocParagraphsSize = 0;
   let lastPage = 0;
 
   // Loop on all paragraphs
-  paragraphs.forEach((p) => {
+  paragraphs.forEach(p => {
     let paragraphSize = 0;
     if (p.isToc) {
       // If the current paragraph is a table of contents update it's page number to be after last page
@@ -56,7 +66,7 @@ JsPDFMake.prototype.updateTOCLinks =  function updateTOCLinks(paragraphs) {
   });
 
   // Link all linked lines to the correct paragraph's first line
-  paragraphs.forEach((p) => {
+  paragraphs.forEach(p => {
     p.lines.forEach(line => {
       if (line.linkParagraphIndex >= 0) {
         line.linkPage = paragraphs[line.linkParagraphIndex].lines[0].pageNumber;
