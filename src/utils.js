@@ -24,12 +24,18 @@ const lessThanOrEqual = (a, b) => {
   return a < b || Math.abs(a - b) < EPS;
 };
 
-const removeCharactersToFitWidth = (text, width, numOfDots, getTextWidth) => {
+const removeCharactersToFitWidth = (
+  text,
+  width,
+  numOfDots,
+  getTextWidth,
+  seperator = ' '
+) => {
   const paddingText = Array(numOfDots)
     .fill('.')
     .join('')
-    .concat('  ');
-  const totalWidth = width + getTextWidth(paddingText);
+    .concat(seperator);
+  const totalWidth = width - getTextWidth(paddingText);
   let nText = '';
   let i = 0;
   while (
@@ -46,12 +52,12 @@ const removeCharactersToFitWidth = (text, width, numOfDots, getTextWidth) => {
   return nText;
 };
 
-const addDotsToFitWidth = (text, width, getTextWidth) => {
+const addDotsToFitWidth = (text, width, getTextWidth, seperator = '  ') => {
   let nText = text;
-  while (lessThanOrEqual(getTextWidth(nText.concat('.  ')), width)) {
+  while (lessThanOrEqual(getTextWidth(nText.concat('.', seperator)), width)) {
     nText = nText.concat('.');
   }
-  return nText.concat('  ');
+  return nText.concat(seperator);
 };
 
 /**
@@ -75,7 +81,7 @@ export const connectWithDotsToFitLine = (line, getTextWidth) => {
     leftText = removeCharactersToFitWidth(
       line.text,
       line.lineWidth - rightTextWidth,
-      0,
+      2,
       getTextWidth
     );
   } else {
