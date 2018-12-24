@@ -1,6 +1,6 @@
 {
   "name": "jspdfmake",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A wrapper for jsPdf that provides a nice api to generate pdf files in an easy and customizable way",
   "main": "dist/jspdfmake.min.js",
   "files": [
