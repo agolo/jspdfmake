@@ -1,11 +1,21 @@
 import formatJson from 'format-json';
-import example from './examples/example_toc';
+// import example from './examples/example_toc1';
 // import fontInBase64 from './fonts/font';
-import { JsPDFMake } from '../src';
+import { generateFeedDocDefination } from './local';
+import feed from './local/feed.json';
+import clusters from './local/clusters.json';
+import outputConfig from './local/outputConfig.json';
+import { JsPDFMake, extendJsPDFAPI } from '../src';
+import addHelveticaLightFont from './local/Helvetica-Light-normal';
 
+extendJsPDFAPI(API => addHelveticaLightFont(API));
+
+const example = generateFeedDocDefination(feed, clusters, true, outputConfig);
 const test = new JsPDFMake('My PDF', example, {
-  pageXMargin: 40,
-  pageYMargin: 40,
+  pageMarginLeft: 70,
+  pageMarginRight: 70,
+  pageMarginTop: 40,
+  pageMarginBottom: 80
 });
 const { doc } = test;
 // test.generateFromDocDefinition();
@@ -41,7 +51,6 @@ editor.getSession().on('change', () => {
     console.error(error);
   }
 });
-
 
 // For debugging
 document.doc = doc;

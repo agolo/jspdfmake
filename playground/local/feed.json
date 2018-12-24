@@ -1,0 +1,100 @@
+{
+  "feedId": "5c163029b52b3c000140920c",
+  "feedClusterCount": 145,
+  "feedArticleCount": 224,
+  "name": "Mohammed Salah The Egyptian King",
+  "userId": "bsLguPpXe4tqvpW5H",
+  "users": [
+    {
+      "user_id": "bsLguPpXe4tqvpW5H",
+      "inviter_id": null,
+      "role": "owner",
+      "notifications": {
+        "email": true
+      },
+      "joined_at": "2018-12-16T10:59:52.836Z",
+      "confirmed": null
+    }
+  ],
+  "sourcesCount": 3,
+  "query": {
+    "bool": {
+      "should": [],
+      "must": [
+        {
+          "query_string": {
+            "query": "\"Mo Salah\"",
+            "fields": ["title^3", "text"],
+            "boost": 1,
+            "tie_breaker": 1
+          }
+        },
+        {
+          "bool": {
+            "should": [
+              {
+                "bool": {
+                  "should": [],
+                  "must": [
+                    {
+                      "query_string": {
+                        "query": "\"application/dowjones+xml\"",
+                        "fields": ["sources.format"],
+                        "boost": 1,
+                        "tie_breaker": 1
+                      }
+                    }
+                  ],
+                  "must_not": [],
+                  "minimum_should_match": 0
+                }
+              },
+              {
+                "bool": {
+                  "should": [],
+                  "must": [
+                    {
+                      "query_string": {
+                        "query": "\"application/acquiremedia+xml\"",
+                        "fields": ["sources.format"],
+                        "boost": 1,
+                        "tie_breaker": 1
+                      }
+                    }
+                  ],
+                  "must_not": [],
+                  "minimum_should_match": 0
+                }
+              },
+              {
+                "bool": {
+                  "should": [],
+                  "must": [
+                    {
+                      "query_string": {
+                        "query": "\"application/factiva\"",
+                        "fields": ["sources.format"],
+                        "boost": 1,
+                        "tie_breaker": 1
+                      }
+                    }
+                  ],
+                  "must_not": [],
+                  "minimum_should_match": 0
+                }
+              }
+            ],
+            "must": [],
+            "must_not": [],
+            "minimum_should_match": 1
+          }
+        }
+      ],
+      "must_not": [],
+      "minimum_should_match": 0
+    }
+  },
+  "startDate": "2018-11-05T00:00:00+02:00",
+  "endDate": "2018-12-19T16:06:48+02:00",
+  "createdAt": "2018-12-16T10:59:52.836Z"
+}

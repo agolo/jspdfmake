@@ -5,6 +5,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
+import json from 'rollup-plugin-json';
 
 const NODE_ENV = process.env.NODE_ENV;
 const isProd = NODE_ENV === 'production';
@@ -19,7 +20,7 @@ export default {
     resolve({
       jsnext: true,
       main: true,
-      browser: true,
+      browser: true
     }),
     commonjs({
       include: 'node_modules/**',
@@ -28,26 +29,24 @@ export default {
         // relative to the current directory, or the name
         // of a module in node_modules
         'node_modules/jspdfmake': ['JsPDFMake']
-      },
+      }
     }),
+    json(),
     eslint({
-      exclude: [
-        'node_modules/**',
-      ],
+      exclude: ['node_modules/**', 'playground/**']
     }),
     babel({
-      exclude: 'node_modules/**',
+      exclude: 'node_modules/**'
     }),
     replace({
       exclude: 'node_modules/**',
-      ENV: JSON.stringify(NODE_ENV),
+      ENV: JSON.stringify(NODE_ENV)
     }),
-    (isProd && uglify()),
+    isProd && uglify()
     // indicate which modules should be treated as external
   ],
-  external: (isProd && ['jspdf']),
-  globals: (isProd && {
+  external: isProd && ['jspdf'],
+  globals: isProd && {
     jspdf: 'jsPDF'
-  }),
+  }
 };
-
