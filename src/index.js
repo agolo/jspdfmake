@@ -65,7 +65,7 @@ JsPDFMake.prototype.updateDocDefinition = function updateDocDefinition(
 };
 
 JsPDFMake.prototype.getCurrentPageNumber = function getCurrentPageNumber() {
-  return this.doc.internal.getCurrentPageInfo().pageNumber;
+  return (this.doc.internal.pages[1] && this.doc.internal.getCurrentPageInfo().pageNumber) || 0;
 };
 
 JsPDFMake.prototype.isCursorOutOfPageVertically = function isCursorOutOfPageVertically(

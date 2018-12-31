@@ -7,8 +7,18 @@ import clusters from './local/clusters.json';
 import outputConfig from './local/outputConfig.json';
 import { JsPDFMake, extendJsPDFAPI } from '../src';
 import addHelveticaLightFont from './local/Helvetica-Light-normal';
+import addAvenirNextLTProRegularFont from './local/AvenirNextLTPro-Regular-normal';
+import addAvenirNextLTProMediumFont from './local/AvenirNextLTPro-Medium-normal';
+// import addAvenirNextLTProDemiFont from './local/AvenirNextLTPro-Demi-normal';
+import addAvenirNextLTProBoldFont from './local/AvenirNextLTPro-Bold-normal';
 
-extendJsPDFAPI(API => addHelveticaLightFont(API));
+extendJsPDFAPI((API) => {
+  addAvenirNextLTProRegularFont(API);
+  addAvenirNextLTProMediumFont(API);
+  // addAvenirNextLTProDemiFont(API);
+  addAvenirNextLTProBoldFont(API);
+  addHelveticaLightFont(API);
+});
 
 const example = generateFeedDocDefination(feed, clusters, true, outputConfig);
 const test = new JsPDFMake('My PDF', example, {

@@ -5,7 +5,7 @@ import logoBase64 from './agoloLogoBase64';
 
 const logoDiameter = 40;
 
-function renderFooter(doc, pageNumber, { width, height }) {
+function renderFooter(doc, pageNumber, { width, height }, linkTOC) {
   const logoXOffset = width - logoDiameter - 50;
   const logoYOffset = height - logoDiameter - 20;
   doc.addImage(
@@ -14,26 +14,27 @@ function renderFooter(doc, pageNumber, { width, height }) {
     logoXOffset,
     logoYOffset,
     logoDiameter,
-    logoDiameter - 3
+    logoDiameter - 3,
   );
-  doc.setFont('helvetica', 'normal');
+  doc.setFont('avenir', 'normal');
   if (pageNumber > 1) {
     const text = `${pageNumber}`;
-    const xOffset = width / 2.0 - doc.getTextWidth(text) / 2.0;
+    const xOffset = (width / 2.0) - (doc.getTextWidth(text) / 2.0);
     const yOffset = height - 40;
     doc
       .setFontSize(11)
       .setTextColor('black')
       .text(xOffset, yOffset, text);
   }
-  if (pageNumber > 2) {
-    const text = 'Back to Table of Contents';
+  if (linkTOC && pageNumber > 2) {
     const xOffset = width - 215;
     const yOffset = height - 40;
     const fontSize = 9;
+    const text = 'Back to Table of Contents';
+
     doc
       .setFontSize(fontSize)
-      .setFontStyle('light')
+      // .setFontStyle('light')
       .setTextColor('#7f7f7f')
       .textWithLink(text, xOffset, yOffset, { pageNumber: 2 });
 
@@ -43,7 +44,7 @@ function renderFooter(doc, pageNumber, { width, height }) {
       xOffset + doc.getTextWidth('Back to '),
       yOffset + 0.7,
       xOffset + doc.getTextWidth(text),
-      yOffset + 0.7
+      yOffset + 0.7,
     );
   }
 }
@@ -61,54 +62,55 @@ export const generateFeedDocDefination = (
   feed,
   clusters,
   isFull,
-  outputConfig
+  outputConfig,
 ) => {
   const linkTOC = outputConfig.contents && clusters.length > 1;
   const tocIds = linkTOC ? ['mainToc'] : [];
   const clustersContent = clusters.reduce(
     (prev, cluster) =>
       prev.concat(generateClusterContent(cluster, outputConfig, tocIds)),
-    []
+    [],
   );
   const docDefinition = {
     content: [
       {
         text: `Project: ${feed.name}\n`,
         fontSize: 16,
-        fontStyle: 'normal',
+        fontName: 'avenir',
         textColor: 'black',
         align: 'center',
         marginTop: 105,
-        marginBottom: 5
+        marginBottom: 5,
       },
       {
-        text: `${moment(feed.startDate).format('MMMM DD, YYYY')} - ${moment(
-          feed.endDate
-        ).format('MMMM DD, YYYY')}`,
+        text: `${moment(feed.startDate).format('MMMM DD, YYYY')} - ${moment(feed.endDate).format('MMMM DD, YYYY')}`,
         fontSize: 12,
-        fontStyle: 'light',
+        fontName: 'avenir',
+        // fontStyle: 'light',
         textColor: '#999999',
         align: 'center',
-        marginBottom: 2
+        marginBottom: 2,
       },
       !isFull
         ? null
         : {
           text: `${feed.feedClusterCount} Summaries`,
           fontSize: 12,
-          fontStyle: 'light',
+          fontName: 'avenir',
+          // fontStyle: 'light',
           textColor: '#999999',
           marginBottom: 2,
-          align: 'center'
+          align: 'center',
         },
       !isFull
         ? null
         : {
           text: `${feed.feedArticleCount} Articles`,
           fontSize: 12,
-          fontStyle: 'light',
+          fontName: 'avenir',
+          // fontStyle: 'light',
           textColor: '#999999',
-          align: 'center'
+          align: 'center',
         },
       linkTOC
         ? {
@@ -117,22 +119,23 @@ export const generateFeedDocDefination = (
             title: {
               text: 'Table of Contents',
               align: 'left',
+              fontName: 'avenir',
               fontSize: 14,
               marginTop: 42,
-              marginBottom: 20
+              marginBottom: 20,
             },
             itemOptions: {
               fontSize: 9,
-              fontStyle: 'normal',
-              marginBottom: 12
-            }
-          }
+              fontName: 'avenir',
+              marginBottom: 12,
+            },
+          },
         }
-        : null
+        : null,
     ]
       .filter(Boolean)
       .concat(clustersContent),
-    renderFooter
+    renderFooter: (doc, pageNumber, { width, height }) => renderFooter(doc, pageNumber, { width, height }, linkTOC),
   };
   return docDefinition;
 };
