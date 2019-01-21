@@ -1,26 +1,20 @@
 import formatJson from 'format-json';
-// import example from './examples/example_toc1';
-// import fontInBase64 from './fonts/font';
-import { generateFeedDocDefination } from './local';
-import feed from './local/feed.json';
-import clusters from './local/clusters.json';
-import outputConfig from './local/outputConfig.json';
+import example from './examples/example_toc1';
 import { JsPDFMake, extendJsPDFAPI } from '../src';
-import addHelveticaLightFont from './local/Helvetica-Light-normal';
-import addAvenirNextLTProRegularFont from './local/AvenirNextLTPro-Regular-normal';
-import addAvenirNextLTProMediumFont from './local/AvenirNextLTPro-Medium-normal';
-// import addAvenirNextLTProDemiFont from './local/AvenirNextLTPro-Demi-normal';
-import addAvenirNextLTProBoldFont from './local/AvenirNextLTPro-Bold-normal';
+import addHelveticaLightFont from './fonts/Helvetica-Light-normal';
+import addAvenirNextLTProRegularFont from './fonts/AvenirNextLTPro-Regular-normal';
+import addAvenirNextLTProMediumFont from './fonts/AvenirNextLTPro-Medium-normal';
+import addAvenirNextLTProDemiFont from './fonts/AvenirNextLTPro-Demi-normal';
+import addAvenirNextLTProBoldFont from './fonts/AvenirNextLTPro-Bold-normal';
 
 extendJsPDFAPI((API) => {
   addAvenirNextLTProRegularFont(API);
   addAvenirNextLTProMediumFont(API);
-  // addAvenirNextLTProDemiFont(API);
+  addAvenirNextLTProDemiFont(API);
   addAvenirNextLTProBoldFont(API);
   addHelveticaLightFont(API);
 });
 
-const example = generateFeedDocDefination(feed, clusters, true, outputConfig);
 const test = new JsPDFMake('My PDF', example, {
   pageMarginLeft: 70,
   pageMarginRight: 70,
@@ -28,13 +22,6 @@ const test = new JsPDFMake('My PDF', example, {
   pageMarginBottom: 80
 });
 const { doc } = test;
-// test.generateFromDocDefinition();
-// doc.addFileToVFS('newfont.ttf', fontInBase64);
-// doc.addFont('newfont.ttf', 'newfont', 'normal');
-
-// const vals = test.drawTextInLine('|________|', 0, 0, 20, 35);
-// const newVals = test.drawTextInLine('|________|', vals.nextXOffset, 0, 25, 35);
-// test.drawTextInLine('|________|', newVals.nextXOffset, 0, 35);
 
 // Render to iframe
 let str = doc.output('datauristring');
