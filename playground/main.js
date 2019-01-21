@@ -1,19 +1,6 @@
 import formatJson from 'format-json';
-import example from './examples/example_toc1';
-import { JsPDFMake, extendJsPDFAPI } from '../src';
-import addHelveticaLightFont from './fonts/Helvetica-Light-normal';
-import addAvenirNextLTProRegularFont from './fonts/AvenirNextLTPro-Regular-normal';
-import addAvenirNextLTProMediumFont from './fonts/AvenirNextLTPro-Medium-normal';
-import addAvenirNextLTProDemiFont from './fonts/AvenirNextLTPro-Demi-normal';
-import addAvenirNextLTProBoldFont from './fonts/AvenirNextLTPro-Bold-normal';
-
-extendJsPDFAPI((API) => {
-  addAvenirNextLTProRegularFont(API);
-  addAvenirNextLTProMediumFont(API);
-  addAvenirNextLTProDemiFont(API);
-  addAvenirNextLTProBoldFont(API);
-  addHelveticaLightFont(API);
-});
+import example from './examples/example_toc';
+import { JsPDFMake } from '../src';
 
 const test = new JsPDFMake('My PDF', example, {
   pageMarginLeft: 70,
