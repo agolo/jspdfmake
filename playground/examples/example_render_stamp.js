@@ -1,56 +1,31 @@
 const example = {
   content: [
     {
-      toc: {
-        id: 'mainToc', // define your table of content id default is mainToc
-        title: {
-          text: 'First Table of content',
-          align: 'left'
-        }
-      }
-    },
-    {
       text:
         'Paragraph 1 Start Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, ',
       fontSize: 20,
       align: 'center',
-      tocIds: ['mainToc', 'midToc', 'endToc'], // the table of contents ids you want this paragraph to be referenced
-      tocItemText: 'Paragraph 1' // text to be displayed for this paragraph in the table of contents page
     },
     {
       text:
         'Paragraph 2 Start Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, ',
       fontSize: 20,
       align: 'center',
-      tocIds: ['midToc', 'endToc'],
-      tocItemText: 'Paragraph 2'
-    },
-    {
-      toc: {
-        id: 'midToc', // another table of contents in the middle of the document
-        title: {
-          text: 'Middle Table of content',
-          align: 'left'
-        }
-      }
     },
     {
       text:
         'Paragraph 3 Start Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, Very large text that takes more than 1 page, ',
       fontSize: 20,
       align: 'center',
-      tocIds: ['midToc', 'endToc'],
-      tocItemText: 'Paragraph 3'
     },
-    {
-      toc: {
-        id: 'endToc', // one more table of contents at the end of the document
-        title: {
-          text: 'Last Table of content',
-          align: 'left'
-        }
-      }
-    }
   ],
+  renderStamp: (doc, pageNumber, { width, height }) => {
+    // doc is the jsPdf document instance
+    doc.text(
+      `My custom footer text ${pageNumber}`,
+      width - 120,
+      height - 20,
+    );
+  },
 };
 export default example;
