@@ -392,17 +392,21 @@ JsPDFMake.prototype.generateFromDocDefinition = function generateFromDocDefiniti
   });
 
   this.drawParagraphs(this.updateTOCLinks(paragraphs));
-  this.renderFooterToPages();
+  this.renderStampToPages();
 };
 
-JsPDFMake.prototype.renderFooterToPages = function renderFooterToPages() {
+JsPDFMake.prototype.renderStampToPages = function renderStampToPages() {
   const { docDefinition, doc, tocSections, pageWidth, pageHeight } = this;
-  const { renderFooter } = docDefinition;
+  let { renderStamp, renderFooter } = docDefinition;
   if (renderFooter) {
+    console.warn('Depricated usage renderFooter, use renderStamp instead');
+    renderStamp = renderFooter;
+  }
+  if (renderStamp) {
     let currentPageNumber = 1;
     while (currentPageNumber <= this.size()) {
       doc.setPage(currentPageNumber);
-      renderFooter(
+      renderStamp(
         doc,
         currentPageNumber,
         {
