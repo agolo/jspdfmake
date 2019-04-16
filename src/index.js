@@ -167,7 +167,7 @@ JsPDFMake.prototype.escapeSpecialCharacters = function escapeSpecialCharacters(
 ) {
   /* eslint-disable */
   return text.replace(
-    /[^A-Za-z 0-9 \n\t\.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g,
+    /[^A-Za-z 0-9 \n\t\.,\?""!@#\$%\^&\*\(\)'`-_=\+;:<>\/\\\|\}\{\[\]`~]*/g,
     ''
   );
 };
