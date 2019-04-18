@@ -1,0 +1,27 @@
+# All overridable parameters are defined in `helm-charts/agolo-service/values.yaml``
+replicas: 1
+
+agolo-service:
+  nameOverride: 'js-pdf-make'
+  image:
+    repository: agolo.azurecr.io/service/js-pdf-make
+    tag: staging
+
+  resources:
+    limits:
+      cpu: 1
+      memory: 1G
+    requests:
+      cpu: 1
+      memory: 1G
+
+  network:
+    type: ClusterIP
+    ports:
+      - name: http
+        containerPort: 80
+        exposedPort: 80
+        # If set, makes the service accessible from the internet to the exposed port
+        ingresses:
+          - host: jspdfmake.staging.agolo.com
+            path: /

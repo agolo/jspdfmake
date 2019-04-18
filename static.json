@@ -1,0 +1,6 @@
+{
+  "root": "playground/public/",
+  "routes": {
+    "/**": "index.html"
+  }
+}
