@@ -8,14 +8,10 @@ RUN npm i -g yarn
 
 WORKDIR /src
 COPY package.json package.json
-COPY yarn.lock yarn.lock
+COPY package-lock.json package-lock.json
 COPY . .
-ARG REACT_APP_COHERENCE_API_URL
-ARG REACT_APP_USER_MANAGEMENT_API_URL
-ARG REACT_APP_NODE_SUMM_API_URL
-ARG REACT_APP_ENV_NAME
-RUN yarn install --production
-RUN yarn build
+RUN npm install
+RUN npm run build
 
 ##--------
 ## WEBAPP
