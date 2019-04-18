@@ -1,0 +1,50 @@
+version: 2.1
+orbs:
+  agolo: agolo/agolo@volatile
+executors:
+  testing-environment:
+    docker:
+      - image: node:10-alpine
+jobs:
+  test:
+    executor: testing-environment
+    working_directory: ~/project/
+    steps:
+      - checkout
+      - run: echo "run tests in circleCI..."
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - test
+      - agolo/docker-build:
+          name: build-staging
+          context: docker
+          service: js-pdf-make
+          language: nodejs
+          requires:
+            - agolo/deployment-test
+            - test
+          filters:
+            branches:
+              only:
+                - staging
+      - agolo/deploy-k8s:
+          name: deploy-staging
+          context: docker
+          release: js-pdf-make
+          extraFlags: >-
+            -f values-${CIRCLE_BRANCH}.yaml
+          kubeContext: ${CIRCLE_BRANCH}
+          requires:
+            - build-staging
+      - agolo/helm-publish:
+          context: docker
+          checkoutdir: ~/js-pdf-make
+          workdir: ~/js-pdf-make/.chart/
+          requires:
+            - deploy-staging
+          filters:
+            branches:
+              only:
+                - staging

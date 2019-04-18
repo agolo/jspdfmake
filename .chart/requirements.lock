@@ -1,0 +1,6 @@
+dependencies:
+- name: agolo-service
+  repository: https://agolo:hiOsJKih2s24RObnUxJsMSNtMMl7XXX4n420DSRxsVvy904juIgGqdkErcyEAAnF@chartmuseum.staging.agolo.com/
+  version: 1.0.0
+digest: sha256:bb6d035ca152689673c93f812eb872ff4a5849dd7d7b8d70af7dbaa207f26461
+generated: 2018-10-17T16:09:53.629944269-04:00
