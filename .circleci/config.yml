@@ -23,7 +23,6 @@ workflows:
           service: js-pdf-make
           language: nodejs
           requires:
-            - agolo/deployment-test
             - test
           filters:
             branches:
