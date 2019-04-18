@@ -17,7 +17,7 @@ RUN npm run build
 ## WEBAPP
 ##--------
 FROM nginx:1.15.5-alpine
-COPY --from=base /src/build /src/static.json /app/
+COPY --from=base /src/playground/public /src/static.json /app/
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 WORKDIR /app
 EXPOSE 80
