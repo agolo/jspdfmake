@@ -18,9 +18,7 @@ export default {
   sourceMap: 'inline',
   plugins: [
     resolve({
-      jsnext: true,
-      main: true,
-      browser: true
+      mainFields: ['jsnext', 'main', 'browser'], // Default: ['module', 'main']
     }),
     commonjs({
       include: 'node_modules/**',
