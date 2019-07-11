@@ -46,7 +46,7 @@
     "moment": "^2.23.0",
     "nodemon": "^1.18.4",
     "npm-run-all": "^3.1.2",
-    "prettier-eslint": "^8.8.2",
+    "prettier-eslint": "^9.0.0",
     "rollup": "^0.39.0",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^7.0.0",
