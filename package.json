@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/agolo/jspdfmake#readme",
   "dependencies": {
-    "jspdf": "1.5.3"
+    "jspdf": "2.3.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
